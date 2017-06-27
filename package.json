@@ -5,7 +5,7 @@
   "main": "src/swiper.ts",
   "repository": "http://github.com/fex-team/swiper",
   "scripts": {
-    "build": "webpack",
+    "build": "webpack -p",
     "dev": "webpack --watch"
   },
   "author": "zhangbobell <zhangbobell@163.com>",
