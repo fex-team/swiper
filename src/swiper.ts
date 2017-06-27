@@ -38,17 +38,6 @@ enum Direction {
 }
 
 type Axis = 'X' | 'Y';
-type SwiperEvent = 
-    'initialize'
-    | 'initialized'
-    | 'renderComplete'
-    | 'swipeBeforeStart'
-    | 'swipeStart'
-    | 'swipeChange'
-    | 'swipeChanged'
-    | 'swipeRestore'
-    | 'swipeRestored'
-    | 'destroy';
 
 interface Point {
     X: number,
@@ -293,7 +282,7 @@ export class Swiper {
             Y: this.end.Y - this.start.Y
         };
 
-        // 尝于 FRR 的丝哝应
+        // 小于 FRR 的不响应
         if (Math.abs(this.offset[this.axis]) < this.frr) {
             return;
         }
@@ -311,17 +300,17 @@ export class Swiper {
             this.activePage = <$Page>document.createElement('div');
         }
 
-        // 有页面坘动
+        // 有页面滑动
         if (this.lastDirection === undefined || this.moveDirection * this.lastDirection < 0) {
             this.fire('swipeStart');
         }
 
         this.lastDirection = this.moveDirection;
 
-        // 消除 FRR 的影哝
+        // 消除 FRR 的影响
         this.offset[this.axis] = this.offset[this.axis] - this.moveDirection * this.frr;
 
-        // 如果兝许滑动并且 activePage 丝为空
+        // 如果允许滑动并且 activePage 不为空
         if (this.transition.duration !== 0
         && this.activePage !== <$Page>document.createElement('div')
         && (this.transition.direction === undefined || this.transition.direction === this.moveDirection)) {
@@ -353,7 +342,7 @@ export class Swiper {
         this.moving = false;
         this.log('end');
 
-        // 如果禝止滑动
+        // 如果禁止滑动
         if ((this.transition.direction && this.transition.direction !== this.moveDirection)
         || this.transition.direction === Direction.Nonward) {
             return;
@@ -367,7 +356,9 @@ export class Swiper {
         let sideOffset: number  = this.offset[this.axis];
         let absOffset: number  = Math.abs(this.offset[this.axis]);
         let absReverseOffset: number  = Math.abs(this.offset[OPPSITE[this.axis]]);
-        let isSwipeOnTheDir: boolean = absReverseOffset < absOffset; // 是坦在沿着axis滑动
+
+        // 是在沿着 axis 滑动
+        let isSwipeOnTheDir: boolean = absReverseOffset < absOffset; 
         
         if (absOffset >= threshold && isSwipeOnTheDir) {
             this.pageChange = true;
