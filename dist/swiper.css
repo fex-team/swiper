@@ -1,0 +1,1 @@
+.lg-swiper,.lg-swiper-page{margin:0;padding:0}.lg-swiper{-webkit-user-select:none;user-select:none}.lg-swiper,.lg-swiper .lg-swiper-page{position:absolute;top:0;left:0;width:100%;height:100%}.lg-swiper .lg-swiper-page{z-index:1;overflow:hidden;display:none}.lg-swiper .lg-swiper-page.current{z-index:5;display:block}.lg-swiper .lg-swiper-page.active{z-index:4;display:block}

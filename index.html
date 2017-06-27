@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>lg-swiper</title>
+	<meta name="viewport" content="width=400, user-scalable=no, minimal-ui">
+</head>
+<!-- build:css -->
+<link rel="stylesheet" type="text/css" href="./dist/swiper.css" />
+<!-- endbuild -->
+<style>
+*{
+	margin: 0;
+	padding: 0;
+}
+
+html, body{
+	height: 100%;
+	width: 100%;
+	background: #DDD;
+}
+
+.ro {
+    height: 100%;
+    width: 100%;
+    color: #ffffff;
+    font-size: 64px;
+    background: #CCC;
+    /*border: #BBB 1px solid;*/
+    box-sizing: border-box;
+}
+
+.ro:before {
+    content: '';
+    position: absolute;
+    left: 100px;
+    top: 100px;
+    background: cornflowerblue;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    border-radius: 100px;
+    width: 100px;
+    height: 100px;
+}
+
+.outer-container{
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	/*outline: #999 1px solid;*/
+}
+
+
+.component{
+	width:100px;
+	height:100px;
+	background:red;
+	position:relative;
+	animation:mymove 5s infinite;
+	-webkit-animation:mymove 5s infinite;
+}
+
+
+@-webkit-keyframes mymove {
+	from {
+		-webkit-transform: translate3d(0, 0, 0);
+	}
+	to {
+		-webkit-transform: translate3d(100px, 0, 0);
+	}
+}
+
+</style>
+<body>
+	<div class="outer-container">
+		
+	</div>
+</body>
+
+<!-- build:js -->
+<script src="./dist/swiper.js"></script>
+<!-- <script src="./effect.js"></script> -->
+<!-- endbuild -->
+
+<script>
+
+var list = [];
+var types = ['slide', 'rotate', 'flip', 'card', 'fade'];
+var colors = ['red', 'green', 'blue', 'orange', 'purple'];
+for (var i = 0; i < 5; i++){
+    list.push({
+        content: '<div data-active="true" class="ro" style="background-color:' + colors[i] + ';">' + i + '<div class="component"></div><a href="http://baidu.com" target="_blank">xxx</a><input /></div>',
+		transition: {
+			name: types[i],
+			duration: 800
+		}
+    });
+}
+
+var swiper = new Swiper({
+	debug: true,
+	data: list,
+	container: document.querySelector('.outer-container'),
+	// isVertical: false,
+	isLoop: true,
+	// initIndex: 0,
+	// 设定从该页面出去的效果
+	transition: {
+		name: 'slide',
+		// duration: 400,
+		// direction: 1
+	},
+
+	onSwipeStart: function () {
+		console.log('onSwipeStart');
+	},
+	onSwipeChange: function () {
+		console.log('onSwipeChange');
+	},
+	onSwipeChanged: function () {
+		console.log('onSwipeChanged')
+	}
+});
+
+
+// swiper.on('swipeChange', function () {
+// 	console.log('swipeChange');
+// });
+
+// swiper.on('swipeChanged', function () {
+// 	console.log('swipeChanged');
+// });
+
+// swiper.on('swipeRestore', function () {
+// 	console.log('swipeRestore');
+// });
+
+// swiper.on('swipeRestored', function () {
+// 	console.log('swipeRestored');
+// });	
+</script>
+</html>
