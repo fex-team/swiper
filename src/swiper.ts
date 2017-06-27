@@ -127,33 +127,33 @@ export class Swiper {
         }
     }
 
-    private _$container: HTMLElement;
-    private _debug: boolean;
-    private _data: Page[];
-    private _axis: Axis;
-    private _isLoop: boolean;    
-    private _initIndex: number;
-    private _frr: number;
-    private _keepDefaultClasses: string[];
-    private _sideLength: number;    
-    private _transition: Transition;
+    private $container: HTMLElement;
+    private debug: boolean;
+    private data: Page[];
+    private axis: Axis;
+    private isLoop: boolean;    
+    private initIndex: number;
+    private frr: number;
+    private keepDefaultClasses: string[];
+    private sideLength: number;    
+    private transition: Transition;
     private _listeners: Listeners;
 
     // runtime member
-    private _$swiper: HTMLElement;
-    private _$pages: $Page[];
-    private _startTime: number;
-    private _endTime: number;
-    private _sliding: boolean;
-    private _moving: boolean;
-    private _start: Point;
-    private _end: Point;
-    private _offset: Vector;
-    private _pageChange: boolean;
-    private _moveDirection: Direction;    
-    private _lastDirection: Direction;
-    private _currentPage: $Page;
-    private _activePage: $Page;
+    private $swiper: HTMLElement;
+    private $pages: $Page[];
+    private startTime: number;
+    private endTime: number;
+    private sliding: boolean;
+    private moving: boolean;
+    private start: Point;
+    private end: Point;
+    private offset: Vector;
+    private pageChange: boolean;
+    private moveDirection: Direction;    
+    private lastDirection: Direction;
+    private currentPage: $Page;
+    private activePage: $Page;
 
     // auxiliary
     public log: Function;
@@ -169,17 +169,17 @@ export class Swiper {
             ...options.transition
         };
 
-        this._$container = options.container;
-        this._debug = options.debug;
-        this._data = options.data;
-        this._axis = options.isVertical ? 'Y' : 'X';
-        this._isLoop = options.isLoop;        
-        this._initIndex = options.initIndex;
-        this._frr = options.frr;
-        this._keepDefaultClasses = options.keepDefaultClass;
+        this.$container = options.container;
+        this.debug = options.debug;
+        this.data = options.data;
+        this.axis = options.isVertical ? 'Y' : 'X';
+        this.isLoop = options.isLoop;        
+        this.initIndex = options.initIndex;
+        this.frr = options.frr;
+        this.keepDefaultClasses = options.keepDefaultClass;
 
-        this._sideLength = this._axis === 'X' ? this._$container.clientWidth : this._$container.clientHeight;
-        this._transition = options.transition;
+        this.sideLength = this.axis === 'X' ? this.$container.clientWidth : this.$container.clientHeight;
+        this.transition = options.transition;
         this._listeners = {};
 
         for (let eventName of Swiper.Events) {
@@ -188,29 +188,29 @@ export class Swiper {
             typeof fn === 'function' && this.on(eventName, fn);
         }
 
-        this._sliding = false;
-        this._moving = false;
-        this._pageChange = false;
+        this.sliding = false;
+        this.moving = false;
+        this.pageChange = false;
 
-        this._start = {X: 0, Y: 0};
-        this._end = {X: 0, Y: 0};
-        this._offset = {X: 0, Y:0};
+        this.start = {X: 0, Y: 0};
+        this.end = {X: 0, Y: 0};
+        this.offset = {X: 0, Y:0};
 
-        this.log = this._debug ? console.log.bind(window.console) : EMPTY_FUNCTION;
-        this._bindEvents();
-        this._initRender();
+        this.log = this.debug ? console.log.bind(window.console) : EMPTY_FUNCTION;
+        this.bindEvents();
+        this.initRender();
     }
 
-    private _bindEvents() {
-        this._$container.addEventListener(Swiper.Device.startEvent, this);
-		this._$container.addEventListener(Swiper.Device.moveEvent, this);
+    private bindEvents() {
+        this.$container.addEventListener(Swiper.Device.startEvent, this);
+		this.$container.addEventListener(Swiper.Device.moveEvent, this);
 		window.addEventListener(Swiper.Device.endEvent, this);
         window.addEventListener(Swiper.Device.resizeEvent, this, false);
     }
 
-    private _unbindEvents() {
-        this._$container.removeEventListener(Swiper.Device.startEvent, this);
-		this._$container.removeEventListener(Swiper.Device.moveEvent, this);
+    private unbindEvents() {
+        this.$container.removeEventListener(Swiper.Device.startEvent, this);
+		this.$container.removeEventListener(Swiper.Device.moveEvent, this);
 		window.removeEventListener(Swiper.Device.endEvent, this);
         window.removeEventListener(Swiper.Device.resizeEvent, this, false);
     }
@@ -223,32 +223,32 @@ export class Swiper {
                     break;
                 }
             case 'touchstart':
-                this._keepDefaultHandler(event);
-                this._startHandler(event);
+                this.keepDefaultHandler(event);
+                this.startHandler(event);
                 break;
             case Swiper.Device.moveEvent:
-                this._keepDefaultHandler(event);
-                this._moveHandler(event);
+                this.keepDefaultHandler(event);
+                this.moveHandler(event);
                 break;
             case Swiper.Device.endEvent:
             case Swiper.Device.cancelEvent:
                 // mouseout, touchcancel event, trigger endEvent
-                this._endHandler(event);
+                this.endHandler(event);
                 break;
             case Swiper.Device.resizeEvent:
-                this._resizeHandler(event);
+                this.resizeHandler(event);
                 break;
             default:
                 break;
         } 
     }
 
-    private _keepDefaultHandler(event: any) {
+    private keepDefaultHandler(event: any) {
         if (event.target && /^(input|textarea|a|select)$/i.test(event.target.tagName)) {
             return;
         }
         
-        let keepDefaultClasses = this._keepDefaultClasses;
+        let keepDefaultClasses = this.keepDefaultClasses;
         for (let keepDefaultClass of keepDefaultClasses){
             if (event.target.classList.contains(keepDefaultClass)) {
                 return;
@@ -258,86 +258,86 @@ export class Swiper {
         event.preventDefault();
     }
 
-    private _startHandler(event: any) {
-        if (this._sliding) {
+    private startHandler(event: any) {
+        if (this.sliding) {
     		return;
     	}
 
-        this._moving = true;
+        this.moving = true;
 
         this.log('start');        
     
-        this._startTime = new Date().getTime();
+        this.startTime = new Date().getTime();
 
-        this._start.X = Swiper.Device.hasTouch ? event.targetTouches[0].pageX : event.pageX;
-        this._start.Y = Swiper.Device.hasTouch ? event.targetTouches[0].pageY : event.pageY;
+        this.start.X = Swiper.Device.hasTouch ? event.targetTouches[0].pageX : event.pageX;
+        this.start.Y = Swiper.Device.hasTouch ? event.targetTouches[0].pageY : event.pageY;
 
         // 设置翻页动画
-        this._transition = {...this._transition, ...this._currentPage.transition};
+        this.transition = {...this.transition, ...this.currentPage.transition};
 
         this.fire('swipeBeforeStart');
     }
 
-    private _moveHandler(event: any) {
-        if (this._sliding || !this._moving) {
+    private moveHandler(event: any) {
+        if (this.sliding || !this.moving) {
     		return;
     	}
 
         this.log('moving');
 
-        this._end.X = Swiper.Device.hasTouch ? event.targetTouches[0].pageX : event.pageX;
-        this._end.Y = Swiper.Device.hasTouch ? event.targetTouches[0].pageY : event.pageY;
+        this.end.X = Swiper.Device.hasTouch ? event.targetTouches[0].pageX : event.pageX;
+        this.end.Y = Swiper.Device.hasTouch ? event.targetTouches[0].pageY : event.pageY;
 
-        this._offset = {
-            X: this._end.X - this._start.X,
-            Y: this._end.Y - this._start.Y
+        this.offset = {
+            X: this.end.X - this.start.X,
+            Y: this.end.Y - this.start.Y
         };
 
         // 尝于 FRR 的丝哝应
-        if (Math.abs(this._offset[this._axis]) < this._frr) {
+        if (Math.abs(this.offset[this.axis]) < this.frr) {
             return;
         }
 
-        if (this._offset[this._axis] < 0) {
-            this._moveDirection = Direction.Forward;
-            this._activePage = this._currentPage.next;
+        if (this.offset[this.axis] < 0) {
+            this.moveDirection = Direction.Forward;
+            this.activePage = this.currentPage.next;
         }
-        else if (this._offset[this._axis] > 0) {
-            this._moveDirection = Direction.Backward;
-            this._activePage = this._currentPage.prev;
+        else if (this.offset[this.axis] > 0) {
+            this.moveDirection = Direction.Backward;
+            this.activePage = this.currentPage.prev;
         }
         else {
-            this._moveDirection = Direction.Nonward;
-            this._activePage = <$Page>document.createElement('div');
+            this.moveDirection = Direction.Nonward;
+            this.activePage = <$Page>document.createElement('div');
         }
 
         // 有页面坘动
-        if (this._lastDirection === undefined || this._moveDirection * this._lastDirection < 0) {
+        if (this.lastDirection === undefined || this.moveDirection * this.lastDirection < 0) {
             this.fire('swipeStart');
         }
 
-        this._lastDirection = this._moveDirection;
+        this.lastDirection = this.moveDirection;
 
         // 消除 FRR 的影哝
-        this._offset[this._axis] = this._offset[this._axis] - this._moveDirection * this._frr;
+        this.offset[this.axis] = this.offset[this.axis] - this.moveDirection * this.frr;
 
         // 如果兝许滑动并且 activePage 丝为空
-        if (this._transition.duration !== 0
-        && this._activePage !== <$Page>document.createElement('div')
-        && (this._transition.direction === undefined || this._transition.direction === this._moveDirection)) {
-            this._pageChange = true;
+        if (this.transition.duration !== 0
+        && this.activePage !== <$Page>document.createElement('div')
+        && (this.transition.direction === undefined || this.transition.direction === this.moveDirection)) {
+            this.pageChange = true;
 
             const GAP = {
                 Forward: 20,
-                Backward: this._sideLength - 20
+                Backward: this.sideLength - 20
             };
 
-            let directionKey = Direction[this._moveDirection];
+            let directionKey = Direction[this.moveDirection];
 
-            if (this._moveDirection * this._end[this._axis] > this._moveDirection * GAP[directionKey]) {
-                let logStr = this._moveDirection === Direction.Forward ? '<--- near edge' : 'near edge --->';
+            if (this.moveDirection * this.end[this.axis] > this.moveDirection * GAP[directionKey]) {
+                let logStr = this.moveDirection === Direction.Forward ? '<--- near edge' : 'near edge --->';
                 this.log(logStr);
-                this._endHandler();
+                this.endHandler();
                 
             }
 
@@ -345,94 +345,94 @@ export class Swiper {
         }
     }
 
-    private _endHandler(event?: any) {
-        if (this._sliding || !this._moving) {
+    private endHandler(event?: any) {
+        if (this.sliding || !this.moving) {
     		return;
     	}
         
-        this._moving = false;
+        this.moving = false;
         this.log('end');
 
         // 如果禝止滑动
-        if ((this._transition.direction && this._transition.direction !== this._moveDirection)
-        || this._transition.direction === Direction.Nonward) {
+        if ((this.transition.direction && this.transition.direction !== this.moveDirection)
+        || this.transition.direction === Direction.Nonward) {
             return;
         }
 
-        this._endTime = new Date().getTime();     
+        this.endTime = new Date().getTime();     
         
-        let moveTime: number = this._endTime - this._startTime;
-        let threshold: number = moveTime > 300 ? this._sideLength / 3 : 14;
+        let moveTime: number = this.endTime - this.startTime;
+        let threshold: number = moveTime > 300 ? this.sideLength / 3 : 14;
 
-        let sideOffset: number  = this._offset[this._axis];
-        let absOffset: number  = Math.abs(this._offset[this._axis]);
-        let absReverseOffset: number  = Math.abs(this._offset[OPPSITE[this._axis]]);
+        let sideOffset: number  = this.offset[this.axis];
+        let absOffset: number  = Math.abs(this.offset[this.axis]);
+        let absReverseOffset: number  = Math.abs(this.offset[OPPSITE[this.axis]]);
         let isSwipeOnTheDir: boolean = absReverseOffset < absOffset; // 是坦在沿着axis滑动
         
         if (absOffset >= threshold && isSwipeOnTheDir) {
-            this._pageChange = true;
+            this.pageChange = true;
             this._swipeTo();
         }
         else {
-            this._moveDirection = -1 * this._moveDirection;
-            this._pageChange = false;
+            this.moveDirection = -1 * this.moveDirection;
+            this.pageChange = false;
             this._swipeTo();
             this.fire('swipeRestore');
         }
     }
 
-    private _resizeHandler(event: any) {
+    private resizeHandler(event: any) {
         
     }
 
     private _swipeTo() {
-        if (this._sliding) {
+        if (this.sliding) {
             return;
         }
 
         // 如果 activePage 为空
-        if (this._activePage === <$Page>document.createElement('div')) {
+        if (this.activePage === <$Page>document.createElement('div')) {
             return;
         }
 
-        this._sliding = true;
+        this.sliding = true;
 
         let requestAnimationFrame: Function = window.requestAnimationFrame
         || window.webkitRequestAnimationFrame;
 
         let startTick: number = null;
-        let startOffset = this._offset[this._axis];
-        let velocity = this._sideLength / this._transition.duration;
+        let startOffset = this.offset[this.axis];
+        let velocity = this.sideLength / this.transition.duration;
 
         const boundary = {
             Forward: {
                 unSwipe: 0,
-                swipe: -this._sideLength
+                swipe: -this.sideLength
             },
             Backward: {
                 unSwipe: 0,
-                swipe: this._sideLength
+                swipe: this.sideLength
             },
             Nonward: 0
         };
 
-        let type = this._pageChange ? 'swipe' : 'unSwipe';
-        let b = boundary[Direction[this._moveDirection]][type] || 0;
+        let type = this.pageChange ? 'swipe' : 'unSwipe';
+        let b = boundary[Direction[this.moveDirection]][type] || 0;
 
         function step(timestamp) {
             if (startTick === null) {
                 startTick = timestamp;
             }
 
-            this._offset[this._axis] = startOffset + (timestamp - startTick) * this._moveDirection * velocity;
-            if (this._moveDirection * this._offset[this._axis] < this._moveDirection * b) {
+            this.offset[this.axis] = startOffset + (timestamp - startTick) * this.moveDirection * velocity;
+            if (this.moveDirection * this.offset[this.axis] < this.moveDirection * b) {
                 this.log(`${ type } rendering...`)
                 this.render();
                 requestAnimationFrame(step.bind(this));
             }
             else {
                 // the last frame
-                this._offset[this._axis] = b;
+                this.offset[this.axis] = b;
                 this.render();
             }
         }
@@ -440,11 +440,11 @@ export class Swiper {
         requestAnimationFrame(step.bind(this));
     }
 
-    private _initRender() {
-        this._$swiper = document.createElement('div');
-        this._$swiper.classList.add('lg-swiper');
+    private initRender() {
+        this.$swiper = document.createElement('div');
+        this.$swiper.classList.add('lg-swiper');
 
-        this._$pages = this._data.map((page, index) => {
+        this.$pages = this.data.map((page, index) => {
             let $page: $Page = <$Page>document.createElement('div');
             $page.classList.add('lg-swiper-page');
 
@@ -457,26 +457,26 @@ export class Swiper {
 			$page.index = index;
             $page.transition = page.transition
 
-			if (this._initIndex === index) {
+			if (this.initIndex === index) {
 				$page.classList.add('current');
-				this._currentPage = $page;
+				this.currentPage = $page;
             }
 
-            this._$swiper.appendChild($page);
+            this.$swiper.appendChild($page);
 
             return $page;
         });
 
-        this._$pages.forEach(($page, index, $pages) => {
-            let prevIndex = this._isLoop ? ($pages.length + index - 1) % $pages.length : (index - 1);
-            let nextIndex = this._isLoop ? ($pages.length + index + 1) % $pages.length : (index + 1);
+        this.$pages.forEach(($page, index, $pages) => {
+            let prevIndex = this.isLoop ? ($pages.length + index - 1) % $pages.length : (index - 1);
+            let nextIndex = this.isLoop ? ($pages.length + index + 1) % $pages.length : (index + 1);
 
-            $page.prev = this._$pages[prevIndex] || <$Page>document.createElement('div');
-            $page.next = this._$pages[nextIndex] || <$Page>document.createElement('div');
+            $page.prev = this.$pages[prevIndex] || <$Page>document.createElement('div');
+            $page.next = this.$pages[nextIndex] || <$Page>document.createElement('div');
         });
         
-        this._$container.style.overflow = 'hidden';
-		this._$container.appendChild(this._$swiper);
+        this.$container.style.overflow = 'hidden';
+		this.$container.appendChild(this.$swiper);
     }
 
     public on(eventName: string, callback: Function): Swiper {
@@ -513,8 +513,8 @@ export class Swiper {
     }
 
     public render() {
-        let axis: Axis = this._axis;
-        let sideOffset: number = this._offset[axis];
+        let axis: Axis = this.axis;
+        let sideOffset: number = this.offset[axis];
         let obsoleteActivePage: any = document.querySelector('.active');
 
         if (obsoleteActivePage) {
@@ -522,60 +522,60 @@ export class Swiper {
             obsoleteActivePage.style.cssText = '';                
         }
         
-        this._currentPage.style.cssText = '';
-        this._activePage.style.cssText = '';
+        this.currentPage.style.cssText = '';
+        this.activePage.style.cssText = '';
 
         this.log('offset : ' + sideOffset);
 
 
-        let renderInstance = Render.getRenderInstance(this._currentPage.transition.name);
+        let renderInstance = Render.getRenderInstance(this.currentPage.transition.name);
         let transform = renderInstance.doRender(this);
         
-        this._activePage.classList.add('active');
+        this.activePage.classList.add('active');
         
-        this._$container.style.cssText = transform.container;
-        this._$swiper.style.cssText = transform.swiper;
-        this._currentPage.style.cssText = transform.currentPage;        
-        this._activePage.style.cssText = transform.activePage;        
+        this.$container.style.cssText = transform.container;
+        this.$swiper.style.cssText = transform.swiper;
+        this.currentPage.style.cssText = transform.currentPage;        
+        this.activePage.style.cssText = transform.activePage;        
 
         // 回弹
-        if (this._pageChange === false && sideOffset === 0) {
-            this._$container.style.cssText = '';
-            this._$swiper.style.cssText = '';
-            this._currentPage.style.cssText = '';
-            this._activePage.style.cssText = '';
+        if (this.pageChange === false && sideOffset === 0) {
+            this.$container.style.cssText = '';
+            this.$swiper.style.cssText = '';
+            this.currentPage.style.cssText = '';
+            this.activePage.style.cssText = '';
             
-            this._activePage.classList.remove('active')  
-            this._activePage = <$Page>document.createElement('div');
+            this.activePage.classList.remove('active')  
+            this.activePage = <$Page>document.createElement('div');
 
-            this._sliding = false;
+            this.sliding = false;
             
-            this._pageChange = false;
-            this._lastDirection = undefined;      
+            this.pageChange = false;
+            this.lastDirection = undefined;      
         }
 
         // 正常翻页
-        if (this._pageChange === true && sideOffset === this._moveDirection * this._sideLength) {
-            this._$container.style.cssText = '';
-            this._$swiper.style.cssText = '';
-            this._currentPage.style.cssText = '';
-            this._activePage.style.cssText = '';
+        if (this.pageChange === true && sideOffset === this.moveDirection * this.sideLength) {
+            this.$container.style.cssText = '';
+            this.$swiper.style.cssText = '';
+            this.currentPage.style.cssText = '';
+            this.activePage.style.cssText = '';
             
-            this._currentPage.classList.remove('current');            
-            this._activePage.classList.remove('active')            
+            this.currentPage.classList.remove('current');            
+            this.activePage.classList.remove('active')            
 
-            this._activePage.classList.add('current');
+            this.activePage.classList.add('current');
             
-            this._currentPage = this._activePage;
-            this._activePage = <$Page>document.createElement('div');
+            this.currentPage = this.activePage;
+            this.activePage = <$Page>document.createElement('div');
 
-            this._offset.X = 0;
-            this._offset.Y = 0;
+            this.offset.X = 0;
+            this.offset.Y = 0;
 
-            this._sliding = false;
+            this.sliding = false;
 
-            this._pageChange = false;
-            this._lastDirection = undefined;
+            this.pageChange = false;
+            this.lastDirection = undefined;
         }
     }
 }

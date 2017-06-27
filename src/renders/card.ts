@@ -20,14 +20,14 @@ const OPPSITE:any = {
 export default class Card extends Render {
 
     doRender(swiper:any) {
-        const axis = swiper._axis;
-        const sideOffset = swiper._offset[axis];
-        const sideLength = swiper._sideLength;
-        const activeTranslate = swiper._pageChange
+        const axis = swiper.axis;
+        const sideOffset = swiper.offset[axis];
+        const sideLength = swiper.sideLength;
+        const activeTranslate = swiper.pageChange
         
         const scaleAxis = OPPSITE[axis];
         const scaleRatio = 1 - 0.2 * Math.abs(sideOffset / sideLength);
-        const sign: Sign = this._sign(sideOffset);
+        const sign: Sign = this.sign(sideOffset);
 
         return {
             currentPage: `-webkit-transform: translateZ(0) scale${scaleAxis}(${scaleRatio}) translate${axis}(${sideOffset}px)`,

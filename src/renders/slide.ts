@@ -15,10 +15,10 @@ type Sign = 0 | -1 | 1;
 export default class Slide extends Render {
 
     doRender(swiper:any) {
-        const axis = swiper._axis;
-        const sideOffset: number = swiper._offset[axis];
-        const sideLength = swiper._sideLength;
-        const sign: Sign = this._sign(sideOffset);
+        const axis = swiper.axis;
+        const sideOffset: number = swiper.offset[axis];
+        const sideLength = swiper.sideLength;
+        const sign: Sign = this.sign(sideOffset);
 
         return {
             currentPage: `-webkit-transform: translateZ(0) translate${axis}(${sideOffset}px)`,

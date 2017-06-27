@@ -21,12 +21,12 @@ const OPPSITE:any = {
 export default class Rotate extends Render {
     
     doRender(swiper:any) {
-        const axis = swiper._axis;
-        const sideOffset = swiper._offset[axis];
-        const sideLength = swiper._sideLength;                
+        const axis = swiper.axis;
+        const sideOffset = swiper.offset[axis];
+        const sideLength = swiper.sideLength;                
         const rotateAxis = OPPSITE[axis];
 
-        const sign: Sign = this._sign(sideOffset);
+        const sign: Sign = this.sign(sideOffset);
         const rotateSign: Sign = axis === 'Y' ? -1 : 1;
 
         return {

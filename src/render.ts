@@ -17,7 +17,6 @@ interface RenderInterface {
 export default abstract class Render {
 
     static _renders: RenderInterface = {};
-    static _defaultRender: Render;
 
     static register(name: string, renderClass: any) {
         Render._renders[name] = renderClass;
@@ -32,7 +31,7 @@ export default abstract class Render {
         return new RenderClass();
     }
 
-    protected _sign(x: number): Sign {
+    protected sign(x: number): Sign {
         x = +x;
 
         if (x === 0 || isNaN(x)) {

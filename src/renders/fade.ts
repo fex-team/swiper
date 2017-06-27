@@ -13,9 +13,9 @@ import Render from '../render';
 export default class Fade extends Render {
 
     doRender(swiper:any) {
-        const axis = swiper._axis;
-        const sideOffset: number = swiper._offset[axis];
-        const sideLength = swiper._sideLength;
+        const axis = swiper.axis;
+        const sideOffset: number = swiper.offset[axis];
+        const sideLength = swiper.sideLength;
 
         return {
             currentPage: `opacity: ${1 - Math.abs(sideOffset / sideLength)}`,
