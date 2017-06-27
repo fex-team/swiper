@@ -87,15 +87,13 @@ interface Listeners {
 
 export class Swiper {
     static Events: string[] = [
-        'initialize',
-        'initialized',
-        'renderComplete',
         'swipeBeforeStart',
         'swipeStart',
         'swipeChange',
         'swipeChanged',
         'swipeRestore',
-        'swipeRestored',
+        'swipeRestored',        
+        'activePageChanged',
         'destroy'
     ];
 
@@ -171,12 +169,7 @@ export class Swiper {
         this.transition = options.transition;
         this._listeners = {};
 
-        for (let eventName of Swiper.Events) {
-            let capitalized = eventName.replace(/^\w{1}/, m => m.toUpperCase());
-            let fn = options[`on${ capitalized }`];
-            typeof fn === 'function' && this.on(eventName, fn);
-        }
-
+        // runtime variable
         this.sliding = false;
         this.moving = false;
         this.pageChange = false;
@@ -302,9 +295,16 @@ export class Swiper {
             this.activePage = EMPTY_PAGE;
         }
 
+        this.fire('swipeChange');
+
+        // 只有超过 FRR 才触发一次 swipeStart 
+        if (this.lastDirection === undefined) {
+            this.fire('swipeStart');
+        }
+
         // 有页面滑动
         if (this.lastDirection === undefined || this.moveDirection * this.lastDirection < 0) {
-            this.fire('swipeStart');
+            this.fire('activePageChanged');
         }
 
         this.lastDirection = this.moveDirection;
@@ -500,11 +500,15 @@ export class Swiper {
     }
 
     public on(eventName: string, callback: Function): Swiper {
-        if (!this._listeners[eventName]) {
-            this._listeners[eventName] = [];
+        let eventNames = eventName.split(' ');
+
+        for (let eventName of eventNames) {
+            if (!this._listeners[eventName]) {
+                this._listeners[eventName] = [];
+            }
+            
+            this._listeners[eventName].push(callback);
         }
-        
-        this._listeners[eventName].push(callback);
 
         return this;
     }
@@ -520,12 +524,11 @@ export class Swiper {
         return this; 
     }
 
-    public fire(eventName: string) {
+    public fire(eventName: string, ...args) {
         if (this._listeners[eventName]) {
-            let args = Array.prototype.slice.call(arguments, 1);
-
             for (let callback of this._listeners[eventName]) {
-                callback.apply(this, args);
+                let extendArgs = {...args, ...{name: eventName}};
+                callback.call(this, extendArgs);
             }
         }
 
@@ -566,12 +569,14 @@ export class Swiper {
             this.activePage.style.cssText = '';
             
             this.activePage.classList.remove('active')  
-            this.activePage = EMPTY_PAGE;
+            this.activePage = EMPTY_PAGE;         
 
             this.sliding = false;
             
             this.pageChange = false;
-            this.lastDirection = undefined;      
+            this.lastDirection = undefined;
+
+            this.fire('swipeRestored');            
         }
 
         // 正常翻页
@@ -596,6 +601,8 @@ export class Swiper {
 
             this.pageChange = false;
             this.lastDirection = undefined;
+
+            this.fire('swipeChanged');
         }
     }
 }
