@@ -25,7 +25,7 @@ Render.register('card', Card);
 Render.register('fade', Fade);
 
 const EMPTY_FUNCTION: Function = () => {};
-const EMPTY_PAGE: HTMLElement = document.createElement('div');
+const EMPTY_PAGE: $Page = <$Page>document.createElement('div');
 const OPPSITE:any = {
     X: 'Y',
     Y: 'X'
@@ -181,7 +181,7 @@ export class Swiper {
         this.moving = false;
         this.pageChange = false;
         this.moveDirection = Direction.Nonward;
-        this.activePage = <$Page>document.createElement('div');
+        this.activePage = EMPTY_PAGE;
 
         this.start = {X: 0, Y: 0};
         this.end = {X: 0, Y: 0};
@@ -299,7 +299,7 @@ export class Swiper {
         }
         else {
             this.moveDirection = Direction.Nonward;
-            this.activePage = <$Page>document.createElement('div');
+            this.activePage = EMPTY_PAGE;
         }
 
         // 有页面滑动
@@ -314,7 +314,7 @@ export class Swiper {
 
         // 如果允许滑动并且 activePage 不为空
         if (this.transition.duration !== 0
-        && this.activePage !== <$Page>document.createElement('div')
+        && this.activePage !== EMPTY_PAGE
         && (this.transition.direction === undefined || this.transition.direction === this.moveDirection)) {
             this.pageChange = true;
 
@@ -378,13 +378,40 @@ export class Swiper {
         
     }
 
+    public swipeTo(toIndex: number, transition: Transition) {
+        let currentIndex = this.currentPage.index;
+        this.moveDirection = Direction.Nonward;
+        this.pageChange = true;
+        
+
+        if (toIndex > currentIndex) {
+            this.moveDirection = Direction.Forward;
+        }
+        else if (toIndex < currentIndex) {
+            this.moveDirection = Direction.Backward;
+        }
+
+        var activeIndex = this.isLoop ? (toIndex + this.data.length) % this.data.length : toIndex;
+        
+        // if the same, do nothing
+        if (activeIndex === currentIndex) {
+            this.pageChange = false;
+        }
+
+        this.activePage = this.$pages[activeIndex] || EMPTY_PAGE;
+        this.offset[this.axis] = 1 * this.moveDirection;
+        this.transition = {...this.transition, ...transition};
+
+        this._swipeTo();
+    }
+
     private _swipeTo() {
         if (this.sliding) {
             return;
         }
 
         // 如果 activePage 为空
-        if (this.activePage === <$Page>document.createElement('div')) {
+        if (this.activePage === EMPTY_PAGE) {
             return;
         }
 
@@ -464,8 +491,8 @@ export class Swiper {
             let prevIndex = this.isLoop ? ($pages.length + index - 1) % $pages.length : (index - 1);
             let nextIndex = this.isLoop ? ($pages.length + index + 1) % $pages.length : (index + 1);
 
-            $page.prev = this.$pages[prevIndex] || <$Page>document.createElement('div');
-            $page.next = this.$pages[nextIndex] || <$Page>document.createElement('div');
+            $page.prev = this.$pages[prevIndex] || EMPTY_PAGE;
+            $page.next = this.$pages[nextIndex] || EMPTY_PAGE;
         });
         
         this.$container.style.overflow = 'hidden';
@@ -521,7 +548,7 @@ export class Swiper {
         this.log('offset : ' + sideOffset);
 
 
-        let renderInstance = Render.getRenderInstance(this.currentPage.transition.name);
+        let renderInstance = Render.getRenderInstance(this.transition.name);
         let transform = renderInstance.doRender(this);
         
         this.activePage.classList.add('active');
@@ -539,7 +566,7 @@ export class Swiper {
             this.activePage.style.cssText = '';
             
             this.activePage.classList.remove('active')  
-            this.activePage = <$Page>document.createElement('div');
+            this.activePage = EMPTY_PAGE;
 
             this.sliding = false;
             
@@ -560,7 +587,7 @@ export class Swiper {
             this.activePage.classList.add('current');
             
             this.currentPage = this.activePage;
-            this.activePage = <$Page>document.createElement('div');
+            this.activePage = EMPTY_PAGE;
 
             this.offset.X = 0;
             this.offset.Y = 0;
