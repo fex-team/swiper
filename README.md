@@ -57,13 +57,13 @@ Swiper 定义了两个数据类型: `Transition` 和 `Page`，`Transition` 用�
 配置项|类型|默认值|说明
 ----|----|----|---
 container           | `DOM` or `string` | document.body                     | swiper 的外层容器 
-data                | [Page](#Page)[]            | []                                |所有页面的数据    
+data                | [Page](#page)[]            | []                                |所有页面的数据    
 debug               | boolean           | `false`                           | 是否开启调试模式    
 isVertical          | boolean           | `true`                            | 是否是垂直方向滑动
 isLoop              | boolean           | `false`                           |是否开启循环翻页 
 frr                 | Number            | 10              | Finger Recognition Range, 超过了这个阈值才被认为是有效滑动
 keepDefaultClass    | string[]          | []              | 保持默认行为的 class 名，详见[这里](#about-keepdefault)
-transition          | [Transition](#Transition)        | `{name: 'slide', duration: 800}`  | 翻页过渡动画
+transition          | [Transition](#transition)        | `{name: 'slide', duration: 800}`  | 翻页过渡动画
 
 ## 关于 keepDefaultClass 说明<a name="about-keepdefault"></a>
 为防止滑动事件中断，Swiper 默认阻止所有除了 `a`, `input`, `textarea`, `select` 元素的滑动事件(mouseXXX, touchXXX)默认响应行为。但是在实际项目中，可能有一些 App 专有的行为需要排除在外（如微信中，长按图片会有识别二维码的响应）。因此 `keepDefaultClass` 就是一个 **要保持默认响应的元素 class 的白名单**。
