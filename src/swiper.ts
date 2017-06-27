@@ -180,6 +180,8 @@ export class Swiper {
         this.sliding = false;
         this.moving = false;
         this.pageChange = false;
+        this.moveDirection = Direction.Nonward;
+        this.activePage = <$Page>document.createElement('div');
 
         this.start = {X: 0, Y: 0};
         this.end = {X: 0, Y: 0};
