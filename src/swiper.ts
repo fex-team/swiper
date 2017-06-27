@@ -535,6 +535,13 @@ export class Swiper {
         return this;
     }
 
+    public destroy() {
+        this.unbindEvents();
+        this.$container.parentElement.removeChild(this.$container);
+
+        this.fire('destroy', {name: 'destroy'});
+    }
+
     public render() {
         let axis: Axis = this.axis;
         let sideOffset: number = this.offset[axis];
