@@ -540,6 +540,7 @@ export class Swiper {
 
     public destroy() {
         this.unbindEvents();
+        this._listeners = {};
         this.$container.parentElement.removeChild(this.$container);
 
         this.fire('destroy', {name: 'destroy'});
