@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Swiper Example</title>
+    <link rel="stylesheet" href="./dist/swiper.css">    
+    <style>
+        /* 容器需要有宽高 */
+        html, body, #outer-container {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="outer-container"></div>
+
+    <script src="./dist/swiper.js"></script>
+    <script>
+        var list = [{
+            content: '<h1>第 0 页</h1>'
+        }, {
+            content: '<h1>第 1 页</h1>'
+        }, {
+            content: '<h1>第 2 页</h1>'
+        }]
+
+        var swiper = new Swiper({
+            container: document.querySelector('#outer-container'),
+            data: list
+        });
+    </script>
+</body>
+</html>

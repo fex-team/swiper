@@ -23,20 +23,30 @@
     - [off](#off)
 
 ## 基本用法
+只需三步即可完成：
+1. 引入 css 和 js；
+
+2. 创建一个容器 `div`，注意：这个容器必须是有宽度和高度（如 100% 或者 650px）；
+```html
+<div class="outer-container"></div>
+```
+
+3. 准备数据，创建 swiper。
 ```javascript
 var list = [{
+    content: '<h1>第 0 页</h1>'
+}, {
     content: '<h1>第 1 页</h1>'
 }, {
     content: '<h1>第 2 页</h1>'
-}, {
-    content: '<h1>第 3 页</h1>'
-}]
+}];
 
 var swiper = new Swiper({
-	container: document.querySelector('body'),
-	data: list
+    container: document.querySelector('.outer-container'),
+    data: list
 });
 ```
+具体可以参考 [example.html](https://github.com/fex-team/swiper/blob/master/example.html)
 
 ## 数据类型
 Swiper 定义了两个数据类型: `Transition` 和 `Page`，`Transition` 用于描述翻页过渡动画，`Page` 用于描述页面。
