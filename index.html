@@ -99,30 +99,34 @@ for (var i = 0; i < 5; i++){
 }
 
 var swiper = new Swiper({
-	debug: true,
+	// debug: true,
 	data: list,
 	container: document.querySelector('.outer-container'),
 	// isVertical: false,
-	isLoop: true,
+	isLoop: false,
 	// initIndex: 0,
 	// 设定从该页面出去的效果
 	transition: {
 		name: 'slide',
 		// duration: 400,
 		// direction: 1
-	},
-
-	onSwipeStart: function () {
-		console.log('onSwipeStart');
-	},
-	onSwipeChange: function () {
-		console.log('onSwipeChange');
-	},
-	onSwipeChanged: function () {
-		console.log('onSwipeChanged')
 	}
 });
 
+var events = [
+	'swipeBeforeStart',
+	'swipeStart',
+	'swipeChange',
+	'swipeChanged',
+	'swipeRestore',
+	'swipeRestored',        
+	'activePageChanged',
+	'destroy'
+];
+
+swiper.on(events.join(' '), function (e) {
+	console.log(e.name);
+})
 
 // swiper.on('swipeChange', function () {
 // 	console.log('swipeChange');
