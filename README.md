@@ -63,7 +63,7 @@ isVertical          | boolean           | `true`                            | �
 isLoop              | boolean           | `false`                           |是否开启循环翻页 
 frr                 | Number            | 10              | Finger Recognition Range, 超过了这个阈值才被认为是有效滑动
 keepDefaultClass    | string[]          | []              | 保持默认行为的 class 名，详见[说明](#about-keepdefault)
-transition          | [Transition](#transition)           | `{name: 'slide', duration: 800}`  | 翻页过渡动画，按照优先级取值，详见[优先级](about-transition-priority)
+transition          | [Transition](#transition)           | `{name: 'slide', duration: 800}`  | 翻页过渡动画，按照优先级取值，详见[优先级](#about-transition-priority)
 
 **关于 keepDefaultClass 说明**<a name="about-keepdefault"></a>
 
@@ -71,7 +71,7 @@ transition          | [Transition](#transition)           | `{name: 'slide', dur
 
 **过渡效果优先级**<a name="about-transition-priority"></a>
 
-swipeTo 设定的翻页效果 > 当前页面的翻页效果 > 全局的翻页效果。
+`swipeTo` 函数设定的翻页效果 > 当前页面的翻页效果 > 全局的翻页效果。
 
 若高优先级已经设定，以高优先级的为准，若未设定，采用低一优先级的翻页效果。
 
@@ -90,7 +90,9 @@ activePageChanged   | 下一页有变动时触发
 destroy             | 销毁实例时触发
 
 其中，页面滑动有两个结果：**回弹**和**翻页**。
+
 回弹即页码没有变化，恢复原状。
+
 翻页即页码产生变化，翻到了下一页。
 
 ## API
@@ -109,10 +111,9 @@ off     | 取消监听事件
 ```javascript
 swiper.swipeTo(toIndex, transition);
 ```
-参数
-`toIndex`: Number, 翻到的页码，从 0 开始计。
-
-`transition`: \[可选\][Transition](#transition), 翻页动画，若未指定，则使用[当前翻页效果](#about-transition-priority)。
+### 参数
+- `toIndex`: Number, 翻到的页码，从 0 开始计。
+- `transition`: \[可选\][Transition](#transition), 翻页动画，若未指定，则使用[当前翻页效果](#about-transition-priority)。
 
 #### 示例
 ```javascript
@@ -130,13 +131,10 @@ swiper.swipeTo(3, {name: 'rotate'});
 ```javascript
 swiper.on(eventName, listener);
 ```
-参数
-`eventName`: string, swiper [事件](#swiper-events)。
-
-`listener`: Function, 当所监听事件触发时，就会接收到通知并执行该函数，拥有 1 个参数。
-    
-    `event`: Object, 默认包含 `name` 属性，表示当前的事件名。
-    
+### 参数
+- `eventName`: string, swiper [事件](#swiper-events)。
+- `listener`: Function, 当所监听事件触发时，就会接收到通知并执行该函数，拥有 1 个参数 `event`。
+    - `event`: Object, 默认包含 `name` 属性，表示当前的事件名。
 
 #### 示例
 ```javascript
@@ -155,9 +153,8 @@ swiper.on('swipeChanged', function (e) {
 swiper.off(eventName, listener);
 ```
 #### 参数
-`eventName`: string, swiper [事件](#swiper-events)
-
-`listener`: Function, 在 `on` 函数中传入的监听函数。
+- `eventName`: string, swiper [事件](#swiper-events)
+- `listener`: Function, 在 `on` 函数中传入的监听函数。
     
 
 #### 示例
