@@ -568,7 +568,6 @@ export class Swiper {
         let renderInstance = Render.getRenderInstance(this.transition.name);
         let transform = renderInstance.doRender(this);
         
-        this.$container.style.cssText = transform.container;
         this.$swiper.style.cssText = transform.swiper;
         this.currentPage.style.cssText = transform.currentPage;  
 

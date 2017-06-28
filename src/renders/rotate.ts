@@ -30,8 +30,7 @@ export default class Rotate extends Render {
         const rotateSign: Sign = axis === 'Y' ? -1 : 1;
 
         return {
-            container: `-webkit-perspective:${sideLength * 4}`,
-            swiper: '-webkit-transform-style:preserve-3d',
+            swiper: `-webkit-perspective:${sideLength * 4}px;-webkit-transform-style:preserve-3d`,
             currentPage: `-webkit-transform: rotate${rotateAxis}(${rotateSign * 90 * sideOffset / sideLength}deg) translateZ(${0.889 * sideLength / 2}px) scale(0.889)`,
             activePage: `-webkit-transform: rotate${rotateAxis}(${rotateSign * 90 * (sideOffset / sideLength - sign)}deg) translateZ(${0.889 * sideLength / 2}px) scale(0.889)`,
         }
