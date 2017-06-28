@@ -313,10 +313,8 @@ export class Swiper {
         // 消除 FRR 的影响
         this.offset[this.axis] = this.offset[this.axis] - this.moveDirection * this.frr;
 
-        // 如果允许滑动并且 activePage 不为空
-        if (this.transition.duration !== 0
-        && this.activePage !== EMPTY_PAGE
-        && (this.transition.direction === undefined || this.transition.direction === this.moveDirection)) {
+        // 允许滑动
+        if (this.transition.direction === undefined || this.transition.direction === this.moveDirection) {
             this.pageChange = true;
 
             const GAP = {
@@ -333,7 +331,10 @@ export class Swiper {
                 
             }
 
-            this.render();
+            // 页码到顶了、到底了或者翻页时长为 0 时不渲染，但是需要在上面判断是否在边界附近
+            if (this.activePage !== EMPTY_PAGE && this.transition.duration !== 0) {
+                this.render();                
+            }
         }
     }
 
@@ -363,7 +364,8 @@ export class Swiper {
         // 是在沿着 axis 滑动
         let isSwipeOnTheDir: boolean = absReverseOffset < absOffset; 
         
-        if (absOffset >= threshold && isSwipeOnTheDir) {
+        // activePage 为空时，表示页码到底了或者到顶了
+        if (absOffset >= threshold && isSwipeOnTheDir && this.activePage !== EMPTY_PAGE) {
             this.pageChange = true;
             this._swipeTo();
         }
@@ -393,13 +395,13 @@ export class Swiper {
         }
 
         var activeIndex = this.isLoop ? (toIndex + this.data.length) % this.data.length : toIndex;
-        
+        this.activePage = this.$pages[activeIndex] || EMPTY_PAGE;
+
         // if the same, do nothing
-        if (activeIndex === currentIndex) {
+        if (activeIndex === currentIndex || this.activePage === EMPTY_PAGE) {
             this.pageChange = false;
         }
 
-        this.activePage = this.$pages[activeIndex] || EMPTY_PAGE;
         this.offset[this.axis] = 1 * this.moveDirection;
         this.transition = {...this.transition, ...transition};
 
@@ -414,9 +416,9 @@ export class Swiper {
             return;
         }
 
-        // 如果 activePage 为空
+        // 如果页码到底了或者到顶了
         if (this.activePage === EMPTY_PAGE) {
-            return;
+            this.offset[this.axis] = 0;
         }
 
         this.sliding = true;
@@ -566,12 +568,15 @@ export class Swiper {
         let renderInstance = Render.getRenderInstance(this.transition.name);
         let transform = renderInstance.doRender(this);
         
-        this.activePage.classList.add('active');
-        
         this.$container.style.cssText = transform.container;
         this.$swiper.style.cssText = transform.swiper;
-        this.currentPage.style.cssText = transform.currentPage;        
-        this.activePage.style.cssText = transform.activePage;        
+        this.currentPage.style.cssText = transform.currentPage;  
+
+        // no one could add class or cssText to EMPTY_PAGE
+        if (this.activePage !== EMPTY_PAGE) {
+            this.activePage.classList.add('active');
+            this.activePage.style.cssText = transform.activePage;                            
+        }      
 
         // 回弹
         if (this.pageChange === false && sideOffset === 0) {
