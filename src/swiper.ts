@@ -402,6 +402,9 @@ export class Swiper {
         this.offset[this.axis] = 1 * this.moveDirection;
         this.transition = {...this.transition, ...transition};
 
+        // 外部调用仍然需要 fire activePageChanged 事件
+        this.fire('activePageChanged');
+
         this._swipeTo();
     }
 
