@@ -10,7 +10,17 @@
 - 完善的事件机制
 - 可扩展的过渡动画
 
-[TOC]
+## 文档
+- [基本用法](#基本用法)
+- [数据类型](#数据类型)
+    - [Transition](#transition)
+    - [Page](#page)
+- [配置选项](#配置选项)
+- [事件](#事件)
+- [API](#api)
+    - [swipeTo](#swipeTo)
+    - [on](#on)
+    - [off](#off)
 
 ## 基本用法
 ```javascript
