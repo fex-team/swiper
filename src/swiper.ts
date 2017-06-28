@@ -302,7 +302,7 @@ export class Swiper {
             this.fire('swipeStart');
         }
 
-        // 有页面滑动
+        // moveDirection 反向，activePage 发生变化
         if (this.lastDirection === undefined || this.moveDirection * this.lastDirection < 0) {
             this.fire('activePageChanged');
         }
