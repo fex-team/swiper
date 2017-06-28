@@ -174,6 +174,7 @@ export class Swiper {
         this.moving = false;
         this.pageChange = false;
         this.moveDirection = Direction.Nonward;
+        this.lastDirection = Direction.Nonward;
         this.activePage = EMPTY_PAGE;
 
         this.start = {X: 0, Y: 0};
@@ -298,12 +299,12 @@ export class Swiper {
         this.fire('swipeChange');
 
         // 只有超过 FRR 才触发一次 swipeStart 
-        if (this.lastDirection === undefined) {
+        if (this.lastDirection === Direction.Nonward) {
             this.fire('swipeStart');
         }
 
         // moveDirection 反向，activePage 发生变化
-        if (this.lastDirection === undefined || this.moveDirection * this.lastDirection < 0) {
+        if (this.lastDirection === Direction.Nonward || this.moveDirection * this.lastDirection < 0) {
             this.fire('activePageChanged');
         }
 
@@ -585,7 +586,7 @@ export class Swiper {
             this.sliding = false;
             
             this.pageChange = false;
-            this.lastDirection = undefined;
+            this.lastDirection = Direction.Nonward;
 
             this.fire('swipeRestored');            
         }
@@ -611,7 +612,7 @@ export class Swiper {
             this.sliding = false;
 
             this.pageChange = false;
-            this.lastDirection = undefined;
+            this.lastDirection = Direction.Nonward;
 
             this.fire('swipeChanged');
         }
