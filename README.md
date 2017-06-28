@@ -18,7 +18,7 @@
 - [配置选项](#配置选项)
 - [事件](#事件)
 - [API](#api)
-    - [swipeTo](#swipeTo)
+    - [swipeTo](#swipeto)
     - [on](#on)
     - [off](#off)
 
