@@ -10,6 +10,8 @@
 - 完善的事件机制
 - 可扩展的过渡动画
 
+[TOC]
+
 ## 基本用法
 ```javascript
 var list = [{
@@ -111,7 +113,7 @@ off     | 取消监听事件
 ```javascript
 swiper.swipeTo(toIndex, transition);
 ```
-### 参数
+#### 参数
 - `toIndex`: Number, 翻到的页码，从 0 开始计。
 - `transition`: \[可选\][Transition](#transition), 翻页动画，若未指定，则使用[当前翻页效果](#about-transition-priority)。
 
@@ -131,7 +133,7 @@ swiper.swipeTo(3, {name: 'rotate'});
 ```javascript
 swiper.on(eventName, listener);
 ```
-### 参数
+#### 参数
 - `eventName`: string, swiper [事件](#swiper-events)。
 - `listener`: Function, 当所监听事件触发时，就会接收到通知并执行该函数，拥有 1 个参数 `event`。
     - `event`: Object, 默认包含 `name` 属性，表示当前的事件名。
