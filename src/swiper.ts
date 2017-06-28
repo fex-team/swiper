@@ -187,16 +187,16 @@ export class Swiper {
     }
 
     private bindEvents() {
-        this.$container.addEventListener(Swiper.Device.startEvent, this);
-		this.$container.addEventListener(Swiper.Device.moveEvent, this);
-		window.addEventListener(Swiper.Device.endEvent, this);
+        this.$container.addEventListener(Swiper.Device.startEvent, this, <any>{passive: false});
+		this.$container.addEventListener(Swiper.Device.moveEvent, this, <any>{passive: false});
+		window.addEventListener(Swiper.Device.endEvent, this, <any>{passive: false});
         window.addEventListener(Swiper.Device.resizeEvent, this, false);
     }
 
     private unbindEvents() {
-        this.$container.removeEventListener(Swiper.Device.startEvent, this);
-		this.$container.removeEventListener(Swiper.Device.moveEvent, this);
-		window.removeEventListener(Swiper.Device.endEvent, this);
+        this.$container.removeEventListener(Swiper.Device.startEvent, this, <any>{passive: false});
+		this.$container.removeEventListener(Swiper.Device.moveEvent, this, <any>{passive: false});
+		window.removeEventListener(Swiper.Device.endEvent, this, <any>{passive: false});
         window.removeEventListener(Swiper.Device.resizeEvent, this, false);
     }
 
