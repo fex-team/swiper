@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>度秘 3.0</title>
+    <link rel="stylesheet" href="../dist/swiper.css">    
+    <style>
+        /* 容器需要有宽高 */
+        html, body, #outer-container {
+            height: 100%;
+            width: 100%;
+            background-color: #ecf1f4; 
+        }
+    </style>
+</head>
+<body>
+    <div id="outer-container"></div>
+
+    <script src="../dist/swiper.js"></script>
+    <script>
+        var list = [{
+            content: '<img src="//kityminder-img.cdn.bcebos.com/01.png" alt="01" width="100%" height="100%">'
+        }, {
+            content: '<img src="//kityminder-img.cdn.bcebos.com/02.png" alt="02" width="100%" height="100%">'
+        }, {
+            content: '<img src="//kityminder-img.cdn.bcebos.com/03.png" alt="03" width="100%" height="100%">'
+        }]
+
+        var swiper = new Swiper({
+            container: document.querySelector('#outer-container'),
+            data: list,
+            isVertical: false,
+            transition: {
+                name: 'dumi'
+            }
+        });
+    </script>
+</body>
+</html>
