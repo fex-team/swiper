@@ -41,5 +41,5 @@ export default abstract class Render {
         return x > 0 ? 1 : -1;
     }
 
-    abstract doRender(swiper): void;
+    abstract doRender(swiper): any;
 }
