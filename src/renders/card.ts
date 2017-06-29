@@ -23,7 +23,6 @@ export default class Card extends Render {
         const axis = swiper.axis;
         const sideOffset = swiper.offset[axis];
         const sideLength = swiper.sideLength;
-        const activeTranslate = swiper.pageChange
         
         const scaleAxis = OPPSITE[axis];
         const scaleRatio = 1 - 0.2 * Math.abs(sideOffset / sideLength);
