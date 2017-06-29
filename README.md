@@ -46,7 +46,7 @@ var swiper = new Swiper({
     data: list
 });
 ```
-具体可以参考 [example.html](https://github.com/fex-team/swiper/blob/master/example.html)
+具体可以参考 [simple.html](https://github.com/fex-team/swiper/blob/master/examples/simple.html)
 
 ## 数据类型
 Swiper 定义了两个数据类型: `Transition` 和 `Page`，`Transition` 用于描述翻页过渡动画，`Page` 用于描述页面。
