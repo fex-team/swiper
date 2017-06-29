@@ -17,12 +17,14 @@ import Rotate from './renders/rotate';
 import Flip from './renders/flip';
 import Card from './renders/card';
 import Fade from './renders/fade';
+import Dumi from './renders/dumi';
 
 Render.register('slide', Slide);
 Render.register('rotate', Rotate);
 Render.register('flip', Flip);
 Render.register('card', Card);
 Render.register('fade', Fade);
+Render.register('dumi', Dumi);
 
 const EMPTY_FUNCTION: Function = () => {};
 const EMPTY_PAGE: $Page = <$Page>document.createElement('div');
