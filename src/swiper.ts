@@ -142,6 +142,7 @@ export class Swiper {
     private currentPage: $Page;
     private activePage: $Page;
 
+    private renderInstance: Render;
     // auxiliary
     public log: Function;
     
@@ -259,6 +260,7 @@ export class Swiper {
 
         // 设置翻页动画
         this.transition = {...this.transition, ...this.currentPage.transition};
+        this.renderInstance = Render.getRenderInstance(this.transition.name);
 
         this.fire('swipeBeforeStart');
     }
@@ -404,6 +406,7 @@ export class Swiper {
 
         this.offset[this.axis] = 1 * this.moveDirection;
         this.transition = {...this.transition, ...transition};
+        this.renderInstance = Render.getRenderInstance(this.transition.name);
 
         // 外部调用仍然需要 fire activePageChanged 事件
         this.fire('activePageChanged');
@@ -565,8 +568,7 @@ export class Swiper {
         this.log('offset : ' + sideOffset);
 
 
-        let renderInstance = Render.getRenderInstance(this.transition.name);
-        let transform = renderInstance.doRender(this);
+        let transform = this.renderInstance.doRender(this);
         
         this.$swiper.style.cssText = transform.swiper;
         this.currentPage.style.cssText = transform.currentPage;  
