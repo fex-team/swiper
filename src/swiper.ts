@@ -382,7 +382,9 @@ export class Swiper {
     }
 
     private resizeHandler(event: any) {
-        
+        if (!this.sliding && !this.moving) {
+            this.sideLength = this.axis === 'X' ? this.$container.clientWidth : this.$container.clientHeight;
+        }
     }
 
     public swipeTo(toIndex: number, transition: Transition) {

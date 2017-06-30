@@ -24,6 +24,8 @@ export class Device {
         this.moveEvent = this.hasTouch ? 'touchmove' : 'mousemove';
         this.endEvent = this.hasTouch ? 'touchend' : 'mouseup';
         this.cancelEvent = this.hasTouch ? 'touchcancel' : 'mouseout';
-        this.resizeEvent = 'onorientationchange' in global ? 'orientationchange' : 'resize'
+
+        // orientationchange also trigger resize
+        this.resizeEvent = 'resize'
     }
 }
