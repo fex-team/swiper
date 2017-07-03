@@ -314,10 +314,15 @@ export class Swiper {
 
         // 消除 FRR 的影响
         this.offset[this.axis] = this.offset[this.axis] - this.moveDirection * this.frr;
+        
+        // 如果页码到底了或者到顶了，防止突然「先上后下」，直接将 this.offset 置为 0
+        if (this.activePage === EMPTY_PAGE) {
+            this.offset[this.axis] = 0;
+        }
 
         // 允许滑动
         if (this.transition.direction === undefined || this.transition.direction === this.moveDirection) {
-            this.pageChange = true;
+            this.pageChange = (this.activePage !== EMPTY_PAGE);
 
             const GAP = {
                 Forward: 20,
@@ -333,8 +338,9 @@ export class Swiper {
                 
             }
 
-            // 页码到顶了、到底了或者翻页时长为 0 时不渲染，但是需要在上面判断是否在边界附近
-            if (this.activePage !== EMPTY_PAGE && this.transition.duration !== 0) {
+            // activePage 为 EMPTY_PAGE 需要渲染，比如快速滑动最后一帧            
+            // 翻页时长为 0 时不渲染，但是需要在上面判断是否在边界附近
+            if (this.transition.duration !== 0) {
                 this.render();                
             }
         }
@@ -600,7 +606,7 @@ export class Swiper {
         }
 
         // 正常翻页
-        if (this.pageChange === true && sideOffset === this.moveDirection * this.sideLength) {
+        else if (this.pageChange === true && sideOffset === this.moveDirection * this.sideLength) {
             this.$container.style.cssText = '';
             this.$swiper.style.cssText = '';
             this.currentPage.style.cssText = '';
