@@ -315,35 +315,37 @@ export class Swiper {
         // 消除 FRR 的影响
         this.offset[this.axis] = this.offset[this.axis] - this.moveDirection * this.frr;
         
-        // 如果页码到底了或者到顶了，防止突然「先上后下」，直接将 this.offset 置为 0
-        if (this.activePage === EMPTY_PAGE) {
+        // 1. 如果页码到底了或者到顶了，
+        // 2. 页面禁止滑动
+        // 防止突然「先上后下」，直接将 this.offset 置为 0
+        // 防止需要「等」 offset 归 0 后才能往上走
+        if (this.activePage === EMPTY_PAGE
+        || this.transition.direction === Direction.Nonward
+        || (this.transition.direction && this.transition.direction !== this.moveDirection)) {
             this.offset[this.axis] = 0;
             this.start = this.end;
         }
 
-        // 允许滑动
-        if (this.transition.direction === undefined || this.transition.direction === this.moveDirection) {
-            this.pageChange = (this.activePage !== EMPTY_PAGE);
+        this.pageChange = (this.activePage !== EMPTY_PAGE);
 
-            const GAP = {
-                Forward: 20,
-                Backward: this.sideLength - 20
-            };
+        const GAP = {
+            Forward: 20,
+            Backward: this.sideLength - 20
+        };
 
-            let directionKey = Direction[this.moveDirection];
+        let directionKey = Direction[this.moveDirection];
 
-            if (this.moveDirection * this.end[this.axis] > this.moveDirection * GAP[directionKey]) {
-                let logStr = this.moveDirection === Direction.Forward ? '<--- near edge' : 'near edge --->';
-                this.log(logStr);
-                this.endHandler();
-                
-            }
+        if (this.moveDirection * this.end[this.axis] > this.moveDirection * GAP[directionKey]) {
+            let logStr = this.moveDirection === Direction.Forward ? '<--- near edge' : 'near edge --->';
+            this.log(logStr);
+            this.endHandler();
+            
+        }
 
-            // activePage 为 EMPTY_PAGE 需要渲染，比如快速滑动最后一帧            
-            // 翻页时长为 0 时不渲染，但是需要在上面判断是否在边界附近
-            if (this.transition.duration !== 0) {
-                this.render();                
-            }
+        // activePage 为 EMPTY_PAGE 需要渲染，比如快速滑动最后一帧            
+        // 翻页时长为 0 时不渲染，但是需要在上面判断是否在边界附近
+        if (this.transition.duration !== 0) {
+            this.render();                
         }
     }
 
@@ -355,10 +357,11 @@ export class Swiper {
         this.moving = false;
         this.log('end');
 
-        // 如果禁止滑动
-        if ((this.transition.direction && this.transition.direction !== this.moveDirection)
-        || this.transition.direction === Direction.Nonward) {
-            return;
+        // 如果是首页或尾页，或者禁止滑动
+        if (this.activePage === EMPTY_PAGE
+        || this.transition.direction === Direction.Nonward
+        || (this.transition.direction && this.transition.direction !== this.moveDirection)) {
+            this.offset[this.axis] = 0;
         }
 
         this.endTime = new Date().getTime();     
@@ -405,15 +408,17 @@ export class Swiper {
             this.moveDirection = Direction.Backward;
         }
 
+        this.offset[this.axis] = 1 * this.moveDirection;
+
         var activeIndex = this.isLoop ? (toIndex + this.data.length) % this.data.length : toIndex;
         this.activePage = this.$pages[activeIndex] || EMPTY_PAGE;
 
         // if the same, do nothing
         if (activeIndex === currentIndex || this.activePage === EMPTY_PAGE) {
+            this.offset[this.axis] = 0;            
             this.pageChange = false;
         }
 
-        this.offset[this.axis] = 1 * this.moveDirection;
         this.transition = {...this.transition, ...transition};
         this.renderInstance = Render.getRenderInstance(this.transition.name);
 
@@ -426,11 +431,6 @@ export class Swiper {
     private _swipeTo() {
         if (this.sliding) {
             return;
-        }
-
-        // 如果页码到底了或者到顶了
-        if (this.activePage === EMPTY_PAGE) {
-            this.offset[this.axis] = 0;
         }
 
         this.sliding = true;
