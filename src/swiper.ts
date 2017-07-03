@@ -7,8 +7,6 @@
  * 
  */
 
-import './swiper.css';
-
 import { Device } from './device';
 
 import Render from './render';
