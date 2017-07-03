@@ -8,6 +8,7 @@
  */
 
 import { Device } from './device';
+import { DeviceEvent } from './device';
 
 import Render from './render';
 import Slide from './renders/slide';
@@ -198,34 +199,36 @@ export class Swiper {
     }
 
     handleEvent(event: any) {
-        switch (event.type) {
+        let deviceEvent = Swiper.Device.getDeviceEvent(event);
+
+        switch (deviceEvent.type) {
             case 'mousedown':
                 // block mouse buttons except left
-                if (event.button !== 0) {
+                if (deviceEvent.button !== 0) {
                     break;
                 }
             case 'touchstart':
-                this.keepDefaultHandler(event);
-                this.startHandler(event);
+                this.keepDefaultHandler(deviceEvent);
+                this.startHandler(deviceEvent.position);
                 break;
             case Swiper.Device.moveEvent:
-                this.keepDefaultHandler(event);
-                this.moveHandler(event);
+                this.keepDefaultHandler(deviceEvent);
+                this.moveHandler(deviceEvent.position);
                 break;
             case Swiper.Device.endEvent:
             case Swiper.Device.cancelEvent:
                 // mouseout, touchcancel event, trigger endEvent
-                this.endHandler(event);
+                this.endHandler();
                 break;
             case Swiper.Device.resizeEvent:
-                this.resizeHandler(event);
+                this.resizeHandler();
                 break;
             default:
                 break;
         } 
     }
 
-    private keepDefaultHandler(event: any) {
+    private keepDefaultHandler(event: DeviceEvent): void {
         if (event.target && /^(input|textarea|a|select)$/i.test(event.target.tagName)) {
             return;
         }
@@ -240,19 +243,16 @@ export class Swiper {
         event.preventDefault();
     }
 
-    private startHandler(event: any) {
+    private startHandler(startPosition: Point) {
         if (this.sliding) {
     		return;
-    	}
+        }
 
-        this.moving = true;
+        this.log('start'); 
 
-        this.log('start');        
-    
+        this.moving = true;    
         this.startTime = new Date().getTime();
-
-        this.start.X = Swiper.Device.hasTouch ? event.targetTouches[0].pageX : event.pageX;
-        this.start.Y = Swiper.Device.hasTouch ? event.targetTouches[0].pageY : event.pageY;
+        this.start = startPosition;
 
         // 设置翻页动画
         this.transition = {...this.transition, ...this.currentPage.transition};
@@ -261,15 +261,14 @@ export class Swiper {
         this.fire('swipeBeforeStart');
     }
 
-    private moveHandler(event: any) {
+    private moveHandler(movingPosition: Point) {
         if (this.sliding || !this.moving) {
     		return;
     	}
 
         this.log('moving');
 
-        this.end.X = Swiper.Device.hasTouch ? event.targetTouches[0].pageX : event.pageX;
-        this.end.Y = Swiper.Device.hasTouch ? event.targetTouches[0].pageY : event.pageY;
+        this.end = movingPosition;
 
         this.offset = {
             X: this.end.X - this.start.X,
@@ -337,7 +336,7 @@ export class Swiper {
         }
     }
 
-    private endHandler(event?: any) {
+    private endHandler() {
         if (this.sliding || !this.moving) {
     		return;
     	}
@@ -364,8 +363,7 @@ export class Swiper {
         // 是在沿着 axis 滑动
         let isSwipeOnTheDir: boolean = absReverseOffset < absOffset; 
         
-        // activePage 为空时，表示页码到底了或者到顶了
-        if (absOffset >= threshold && isSwipeOnTheDir && this.activePage !== EMPTY_PAGE) {
+        if (absOffset >= threshold && isSwipeOnTheDir) {
             this.pageChange = true;
             this._swipeTo();
         }
@@ -377,7 +375,7 @@ export class Swiper {
         }
     }
 
-    private resizeHandler(event: any) {
+    private resizeHandler() {
         if (!this.sliding && !this.moving) {
             this.sideLength = this.axis === 'X' ? this.$container.clientWidth : this.$container.clientHeight;
         }

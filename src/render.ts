@@ -22,7 +22,7 @@ export default abstract class Render {
         Render._renders[name] = renderClass;
     }
 
-    static getRenderInstance(name) {
+    static getRenderInstance(name: string) {
         let RenderClass = Render._renders[name];
         if (!RenderClass) {
             throw new Error(`Missing render : ${ name }`);
