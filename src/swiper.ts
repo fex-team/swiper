@@ -318,6 +318,7 @@ export class Swiper {
         // 如果页码到底了或者到顶了，防止突然「先上后下」，直接将 this.offset 置为 0
         if (this.activePage === EMPTY_PAGE) {
             this.offset[this.axis] = 0;
+            this.start = this.end;
         }
 
         // 允许滑动
