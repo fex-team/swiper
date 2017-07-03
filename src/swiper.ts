@@ -74,7 +74,6 @@ interface Options {
     isVertical?: boolean;
     isLoop?: boolean;    
     initIndex?: number;
-    frr?: number;
     keepDefaultClass?: string[];
     transition?: Transition;
 }
@@ -106,7 +105,6 @@ export class Swiper {
         isVertical: true,
         isLoop: false,
         initIndex: 0,
-        frr: 10,
         keepDefaultClass: [],
         transition: {
             name: 'slide',
@@ -120,7 +118,6 @@ export class Swiper {
     private axis: Axis;
     private isLoop: boolean;    
     private initIndex: number;
-    private frr: number;
     private keepDefaultClasses: string[];
     private sideLength: number;    
     private transition: Transition;
@@ -163,7 +160,6 @@ export class Swiper {
         this.axis = options.isVertical ? 'Y' : 'X';
         this.isLoop = options.isLoop;        
         this.initIndex = options.initIndex;
-        this.frr = options.frr;
         this.keepDefaultClasses = options.keepDefaultClass;
 
         this.sideLength = this.axis === 'X' ? this.$container.clientWidth : this.$container.clientHeight;
@@ -280,11 +276,6 @@ export class Swiper {
             Y: this.end.Y - this.start.Y
         };
 
-        // 小于 FRR 的不响应
-        if (Math.abs(this.offset[this.axis]) < this.frr) {
-            return;
-        }
-
         if (this.offset[this.axis] < 0) {
             this.moveDirection = Direction.Forward;
             this.activePage = this.currentPage.next;
@@ -300,7 +291,7 @@ export class Swiper {
 
         this.fire('swipeChange');
 
-        // 只有超过 FRR 才触发一次 swipeStart 
+        // 第一次进入 moving 时触发 swipeStart 
         if (this.lastDirection === Direction.Nonward) {
             this.fire('swipeStart');
         }
@@ -311,9 +302,6 @@ export class Swiper {
         }
 
         this.lastDirection = this.moveDirection;
-
-        // 消除 FRR 的影响
-        this.offset[this.axis] = this.offset[this.axis] - this.moveDirection * this.frr;
         
         // 1. 如果页码到底了或者到顶了，
         // 2. 页面禁止滑动

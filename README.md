@@ -83,7 +83,6 @@ data                | [Page](#page)[]            | []                           
 debug               | boolean           | `false`                           | 是否开启调试模式    
 isVertical          | boolean           | `true`                            | 是否是垂直方向滑动
 isLoop              | boolean           | `false`                           |是否开启循环翻页 
-frr                 | Number            | 10              | Finger Recognition Range, 超过了这个阈值才被认为是有效滑动
 keepDefaultClass    | string[]          | []              | 保持默认行为的 class 名，详见[说明](#about-keepdefault)
 transition          | [Transition](#transition)           | `{name: 'slide', duration: 800}`  | 翻页过渡动画，按照优先级取值，详见[优先级](#about-transition-priority)
 
