@@ -396,11 +396,12 @@ export class Swiper {
 
         this.offset[this.axis] = 1 * this.moveDirection;
 
-        var activeIndex = this.isLoop ? (toIndex + this.data.length) % this.data.length : toIndex;
+        let activeIndex = this.isLoop ? (toIndex + this.data.length) % this.data.length : toIndex;
         this.activePage = this.$pages[activeIndex] || EMPTY_PAGE;
 
         // if the same, do nothing
         if (activeIndex === currentIndex || this.activePage === EMPTY_PAGE) {
+            this.moveDirection = Direction.Nonward;
             this.offset[this.axis] = 0;            
             this.pageChange = false;
         }
