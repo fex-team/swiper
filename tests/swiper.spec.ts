@@ -8,6 +8,7 @@
  */
 
 import {Swiper} from '../src/swiper';
+import Slide from '../src/renders/slide';
 
 describe('test swiper', () => {
     document.body.innerHTML = '<div class="outer-container" style="width: 400px; height: 650px;"></div>';
@@ -367,6 +368,96 @@ describe('test swiper', () => {
             
             swiper._swipeTo();
             expect(window.requestAnimationFrame).toHaveBeenCalledTimes(0);
+        });
+
+        test('test up swipe _swipeTo', () => {
+            window.requestAnimationFrame = jest.fn();
+
+            swiper.offset[swiper.axis] = -300;
+            swiper.pageChange = true;
+            swiper.moveDirection = -1;
+
+            swiper._swipeTo();
+            expect(window.requestAnimationFrame).toBeCalled();
+        });
+
+        test('test last frame of swipe _swipeTo', () => {
+            window.requestAnimationFrame = jest.fn();
+
+            swiper.offset[swiper.axis] = -651;
+            swiper.pageChange = true;
+            swiper.moveDirection = -1;
+
+            swiper._swipeTo();
+            expect(window.requestAnimationFrame).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe('test swiper listener functions', () => {
+        test('swiper.on and fire function', () => {
+            const callback = jest.fn();
+
+            swiper.on('swipeStart', callback);
+            swiper.on('swipeStart', callback);
+            swiper.fire('swipeStart');
+            expect(callback).toHaveBeenCalledTimes(2);
+        });
+
+        test('swiper.off and fire function', () => {
+            const callback = jest.fn();
+
+            swiper.on('swipeStart', callback);
+            swiper.off('swipeStart', callback);
+            swiper.off('anotherEvent', callback);
+            swiper.fire('swipeStart');
+            expect(callback).toHaveBeenCalledTimes(0);
+        });
+    });
+
+    describe('test swiper destroy', () => {
+        test('swiper.on and fire function', () => {
+            swiper.unbindEvents = jest.fn();
+            swiper.fire = jest.fn();
+
+            swiper.destroy();
+            expect(swiper.unbindEvents).toBeCalled();
+            expect(swiper._listeners).toEqual({});
+            expect(swiper.$container.contains(swiper.$swiper)).toBeFalsy();
+            expect(swiper.fire).toHaveBeenCalledWith('destroy');
+        });
+    });
+
+    describe('test render function', () => {
+        test('test normal render', () => {
+            swiper.activePage = swiper.$pages[2];
+            swiper.offset[swiper.axis] = -10;
+            swiper.renderInstance = new Slide();
+
+            swiper.render();
+
+            expect(swiper.activePage.classList.contains('active')).toBeTruthy();
+        });
+
+        test('test unswipe end render', () => {
+            swiper.pageChange = false;
+            swiper.offset[swiper.axis] = 0;
+            swiper.renderInstance = new Slide();
+
+            swiper.render();
+
+            expect(swiper.activePage.classList.contains('active')).toBeFalsy();
+        });
+
+        test('test swipe end render', () => {
+            swiper.pageChange = true;
+            swiper.moveDirection = 1;
+            swiper.offset[swiper.axis] = 650;
+            swiper.sideLength = 650;
+            swiper.renderInstance = new Slide();
+
+            swiper.render();
+
+            expect(swiper.activePage.classList.contains('current')).toBeTruthy();
         });
     });
 
