@@ -17,3 +17,4 @@ deploy:
   skip_cleanup: true
   on:
     branch: master
+    condition: TRAVIS_REPO_SLUG = fex-team/swiper
