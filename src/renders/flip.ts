@@ -33,8 +33,8 @@ export default class Flip extends Render {
         const cssText = '-webkit-backface-visibility:hidden;';
 
         return {
-            swiper: `-webkit-perspective:${sideLength * 4}px;-webkit-transform-style:flat`,
-            currentPage: `${cssText}-webkit-transform: translateZ(${sideLength / 2}px) rotate${rotateAxis}(${rotateSign * 180 * sideOffset / sideLength}deg) scale(0.875)`,
+            swiper: `-webkit-perspective:${sideLength * 4}px;-webkit-transform-style:flat;`,
+            currentPage: `${cssText}-webkit-transform: translateZ(${sideLength / 2}px) rotate${rotateAxis}(${rotateSign * 180 * sideOffset / sideLength}deg) scale(0.875);`,
             activePage: `${cssText}-webkit-transform: translateZ(${sideLength / 2}px) rotate${rotateAxis}(${rotateSign * 180 * (sideOffset / sideLength + 1) }deg) scale(0.875);z-index: 7;`
         }
     }

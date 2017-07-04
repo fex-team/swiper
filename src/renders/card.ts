@@ -29,8 +29,8 @@ export default class Card extends Render {
         const sign: Sign = this.sign(sideOffset);
 
         return {
-            currentPage: `-webkit-transform: translateZ(0) scale${scaleAxis}(${scaleRatio}) translate${axis}(${sideOffset}px)`,
-            activePage: `-webkit-transform: translateZ(0) translate${axis}(${sideOffset - sign * sideLength}px)`
+            currentPage: `-webkit-transform: translateZ(0) scale${scaleAxis}(${scaleRatio}) translate${axis}(${sideOffset}px);`,
+            activePage: `-webkit-transform: translateZ(0) translate${axis}(${sideOffset - sign * sideLength}px);`
         };
     }
 }

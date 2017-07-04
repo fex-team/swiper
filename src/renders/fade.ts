@@ -18,8 +18,8 @@ export default class Fade extends Render {
         const sideLength = swiper.sideLength;
 
         return {
-            currentPage: `opacity: ${1 - Math.abs(sideOffset / sideLength)}`,
-            activePage: `opacity: ${Math.abs(sideOffset / sideLength)}`
+            currentPage: `opacity: ${1 - Math.abs(sideOffset / sideLength)};`,
+            activePage: `opacity: ${Math.abs(sideOffset / sideLength)};`
         };
     }
 }

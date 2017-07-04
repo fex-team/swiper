@@ -32,8 +32,8 @@ export default class Dumi extends Render {
         const sign: Sign = this.sign(sideOffset);
 
         return {
-            currentPage: `-webkit-transform: translateZ(0) translate${axis}(${sideOffset}px) scale(${currentRatio}) `,
-            activePage: `-webkit-transform: translateZ(0) translate${axis}(${sideOffset - sign * sideLength}px) scale(${activeRatio})`
+            currentPage: `-webkit-transform: translateZ(0) translate${axis}(${sideOffset}px) scale(${currentRatio});`,
+            activePage: `-webkit-transform: translateZ(0) translate${axis}(${sideOffset - sign * sideLength}px) scale(${activeRatio});`
         };
     }
 }
