@@ -1,4 +1,5 @@
 # Swiper
+[![Build Status](https://travis-ci.org/fex-team/swiper.svg?branch=master)](https://travis-ci.org/fex-team/swiper)
 
 轻量的移动端 H5 翻页库，提供了必要的配置选项和 API，同时具有高性能的特点。目前百度 H5 运行时页面在使用。
 支持的功能：
