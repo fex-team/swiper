@@ -544,7 +544,7 @@ export class Swiper {
         this._listeners = {};
         this.$swiper.parentElement.removeChild(this.$swiper);
 
-        this.fire('destroy', {name: 'destroy'});
+        this.fire('destroy');
     }
 
     public render() {
