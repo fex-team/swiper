@@ -500,7 +500,6 @@ export class Swiper {
             $page.next = this.$pages[nextIndex] || EMPTY_PAGE;
         });
         
-        this.$container.style.overflow = 'hidden';
 		this.$container.appendChild(this.$swiper);
     }
 
@@ -543,7 +542,7 @@ export class Swiper {
     public destroy() {
         this.unbindEvents();
         this._listeners = {};
-        this.$container.parentElement.removeChild(this.$container);
+        this.$swiper.parentElement.removeChild(this.$swiper);
 
         this.fire('destroy', {name: 'destroy'});
     }
@@ -577,7 +576,6 @@ export class Swiper {
 
         // 回弹
         if (this.pageChange === false && sideOffset === 0) {
-            this.$container.style.cssText = '';
             this.$swiper.style.cssText = '';
             this.currentPage.style.cssText = '';
             this.activePage.style.cssText = '';
@@ -595,7 +593,6 @@ export class Swiper {
 
         // 正常翻页
         else if (this.pageChange === true && sideOffset === this.moveDirection * this.sideLength) {
-            this.$container.style.cssText = '';
             this.$swiper.style.cssText = '';
             this.currentPage.style.cssText = '';
             this.activePage.style.cssText = '';
