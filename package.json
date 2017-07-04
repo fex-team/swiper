@@ -7,7 +7,8 @@
   "scripts": {
     "build": "webpack -p",
     "dev": "webpack --watch",
-    "test": "jest"
+    "test": "jest",
+    "coveralls": "cat ./__coverage__/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "jest": {
     "setupTestFrameworkScriptFile": "<rootDir>/tests/__setupFiles__/rAF.js",
@@ -29,6 +30,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^20.0.2",
+    "coveralls": "^2.13.1",
     "css-loader": "^0.28.4",
     "extract-text-webpack-plugin": "^2.1.2",
     "jest": "^20.0.4",
