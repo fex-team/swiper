@@ -1,0 +1,18 @@
+language: node_js
+node_js:
+  - "6"
+install:
+  - yarn
+script:
+  - yarn test && yarn build
+deploy:
+  overwrite: true
+  provider: releases
+  api_key: 
+    secure: "b3ad9473b10a283c220dc03f27db2410895ecf53"
+  file:
+    - "dist/swiper.css"
+    - "dist/swiper.js"
+  skip_cleanup: true
+  on:
+    branch: master
