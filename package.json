@@ -14,6 +14,9 @@
     "transform": {
       ".ts": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
+    "moduleNameMapper": {
+      "\\.css$": "<rootDir>/tests/__mocks__/styleMock.ts"
+    },
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|js)$",
     "collectCoverage": true,
     "coverageDirectory": "__coverage__",

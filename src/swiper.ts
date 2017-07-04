@@ -6,6 +6,7 @@
  * @created: 2017.06.26
  * 
  */
+import './swiper.css';
 
 import { Device } from './device';
 import { DeviceEvent } from './device';
