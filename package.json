@@ -10,7 +10,7 @@
     "test": "jest"
   },
   "jest": {
-    "setupTestFrameworkScriptFile": "<rootDir>/tests/setupFiles/rAF.js",
+    "setupTestFrameworkScriptFile": "<rootDir>/tests/__setupFiles__/rAF.js",
     "transform": {
       ".ts": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
