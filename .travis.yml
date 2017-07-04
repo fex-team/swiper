@@ -9,7 +9,7 @@ deploy:
   overwrite: true
   provider: releases
   api_key: 
-    secure: "b3ad9473b10a283c220dc03f27db2410895ecf53"
+    secure: oF4a/gp7+XjnbR9lBVZz5W/da00ERLUJH9viwTvsmMIPoUqu80NgBToP0J8EyDhxcLAtzAxrSr1FZa5p1PW5mJyAA+q6LDwU7i/cynfODJqZj8xylwLGnCY0yegmHCnkXcY1fsVwYIJRqfN7TqghMaAUAk8x9ue6y5eWkVdYtsEA0cg+KxvReUDFB3XXriJPpo4Fp+yUa26r2QHli5CpVx5PmI+xYlEoWnE+isnuaskA8jipa+kGIfguf/pASLIvD0FWkZM5+573VLSedtnJ3iJgiyS/YYRM5jysNn0YLjLgLPQxqDc/XbpvhmTKD86dcwQdzZ0fkGJb6IQZhIa0aid22oizGGuN7Zb39GH8yD2ckId5KpxcMpkmH6gkR145p9didpyodS4Jm50qbBGa0GZL/fvrSkC0b5a7Jjn0IHkV1Z8fbK0ORkWjJsjzKkAlmix77+oRLcP6sCR7GgmERYCeO6I89oZis6GLXqsmfaQEIXnJmEs9a43Y7Lk/rza2vWAYRNev4wpLo00EFtOYMMXLeREO79R1yKV+SMlh30YdnH48YaebvG7aa+ym+Od/mZ5sRktv09/V4OVZLW5ynL2EQY+mDgjEvI7FUTMazQMjwfzkMfA0kDtfyiwtvkDORhN3GqrY1vVzIASSd2NYWfwTdw8bPHg0VZfFEHiV1RE=
   file:
     - "dist/swiper.css"
     - "dist/swiper.js"
