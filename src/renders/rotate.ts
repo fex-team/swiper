@@ -22,7 +22,7 @@ export default class Rotate extends Render {
     
     doRender(swiper:any) {
         const axis = swiper.axis;
-        const sideOffset = swiper.offset[axis];
+        const sideOffset = swiper.sideOffset;
         const sideLength = swiper.sideLength;                
         const rotateAxis = OPPSITE[axis];
 

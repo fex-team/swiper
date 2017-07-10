@@ -566,7 +566,11 @@ export class Swiper {
         this.log('offset : ' + sideOffset);
 
 
-        let transform = this.renderInstance.doRender(this);
+        let transform = this.renderInstance.doRender({
+            axis: axis,
+            sideOffset: this.easeOutQuad(sideOffset, this.sideLength),
+            sideLength: this.sideLength
+        });
         
         this.$swiper.style.cssText = transform.swiper;
         this.currentPage.style.cssText = transform.currentPage;  
@@ -618,5 +622,22 @@ export class Swiper {
 
             this.fire('swipeChanged');
         }
+    }
+
+    public easeOutQuad(sideOffset, sideLength) {
+        let t = Math.abs(sideOffset / sideLength);
+        let y = 0.5*t*(3-t);
+
+        return this.sign(sideOffset) * y * sideLength;
+    }
+
+    private sign(x: number) {
+        x = +x;
+
+        if (x === 0 || isNaN(x)) {
+            return 0;
+        }
+
+        return x > 0 ? 1 : -1;
     }
 }

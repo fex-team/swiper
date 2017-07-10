@@ -23,7 +23,7 @@ export default class Dumi extends Render {
 
     doRender(swiper:any) {
         const axis = swiper.axis;
-        const sideOffset = swiper.offset[axis];
+        const sideOffset = swiper.sideOffset;
         const sideLength = swiper.sideLength;
         
         const scaleAxis = OPPSITE[axis];

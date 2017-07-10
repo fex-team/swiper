@@ -22,11 +22,9 @@ export default class Flip extends Render {
     
     doRender(swiper:any) {
         const axis = swiper.axis;
-        const sideOffset = swiper.offset[axis];
-        const sideLength = swiper.sideLength;                
-        const moveDirection = swiper.moveDirection;        
+        const sideOffset = swiper.sideOffset;
+        const sideLength = swiper.sideLength;   
         const rotateAxis = OPPSITE[axis];
-        const pageChange = swiper.pageChange;
 
         const rotateSign: Sign = axis === 'Y' ? -1 : 1;
 

@@ -14,7 +14,7 @@ export default class Fade extends Render {
 
     doRender(swiper:any) {
         const axis = swiper.axis;
-        const sideOffset: number = swiper.offset[axis];
+        const sideOffset: number = swiper.sideOffset;
         const sideLength = swiper.sideLength;
 
         return {
