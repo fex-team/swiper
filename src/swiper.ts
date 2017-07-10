@@ -501,6 +501,7 @@ export class Swiper {
             $page.next = this.$pages[nextIndex] || EMPTY_PAGE;
         });
         
+        this.$container.style.overflow = 'hidden';
 		this.$container.appendChild(this.$swiper);
     }
 
@@ -543,6 +544,7 @@ export class Swiper {
     public destroy() {
         this.unbindEvents();
         this._listeners = {};
+        this.$container.style.overflow = '';
         this.$swiper.parentElement.removeChild(this.$swiper);
 
         this.fire('destroy');
