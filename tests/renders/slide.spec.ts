@@ -10,17 +10,15 @@
 import Slide from '../../src/renders/slide';
 
 describe('test slide render', () => {
-    const slide;
-    const mockSwiper;
+    let slide;
+    let mockSwiper;
 
     beforeEach(() => {
         slide = new Slide();
         mockSwiper = {
             axis: 'Y',
-            offset: {
-                Y: -100
-            },
-            sideLength: 650;
+            sideOffset: -100,
+            sideLength: 650
         };
 
     });

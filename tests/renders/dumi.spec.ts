@@ -10,17 +10,15 @@
 import Dumi from '../../src/renders/dumi';
 
 describe('test dumi render', () => {
-    const slide;
-    const mockSwiper;
+    let slide;
+    let mockSwiper;
 
     beforeEach(() => {
         slide = new Dumi();
         mockSwiper = {
             axis: 'Y',
-            offset: {
-                Y: -325
-            },
-            sideLength: 650;
+            sideOffset: -325,
+            sideLength: 650
         };
     });
 
