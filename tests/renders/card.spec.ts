@@ -10,8 +10,8 @@
 import Card from '../../src/renders/card';
 
 describe('test card render', () => {
-    const slide;
-    const mockSwiper;
+    let slide;
+    let mockSwiper;
 
     beforeEach(() => {
         slide = new Card();
@@ -20,10 +20,8 @@ describe('test card render', () => {
     test('normal card render in Y', () => {
         mockSwiper = {
             axis: 'Y',
-            offset: {
-                Y: -65
-            },
-            sideLength: 650;
+            sideOffset: -65,
+            sideLength: 650
         };
         
         let transform = slide.doRender(mockSwiper);
@@ -35,10 +33,8 @@ describe('test card render', () => {
     test('normal card render in X', () => {
         mockSwiper = {
             axis: 'X',
-            offset: {
-                X: -200
-            },
-            sideLength: 400;
+            sideOffset: -200,
+            sideLength: 400
         };
         
         let transform = slide.doRender(mockSwiper);
@@ -50,10 +46,8 @@ describe('test card render', () => {
     test('normal card render for positive offset', () => {
         mockSwiper = {
             axis: 'Y',
-            offset: {
-                Y: 65
-            },
-            sideLength: 650;
+            sideOffset: 65,
+            sideLength: 650
         };
         
         let transform = slide.doRender(mockSwiper);
@@ -65,10 +59,8 @@ describe('test card render', () => {
     test('normal card render for 0 offset', () => {
         mockSwiper = {
             axis: 'Y',
-            offset: {
-                Y: 0
-            },
-            sideLength: 650;
+            sideOffset: 0,
+            sideLength: 650
         };
         
         let transform = slide.doRender(mockSwiper);
@@ -80,10 +72,8 @@ describe('test card render', () => {
     test('test sign function', () => {
         mockSwiper = {
             axis: 'Y',
-            offset: {
-                Y: -65
-            },
-            sideLength: 650;
+            sideOffset: -65,
+            sideLength: 650
         };
         
         slide.sign = jest.fn();

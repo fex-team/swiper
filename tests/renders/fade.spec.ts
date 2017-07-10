@@ -11,17 +11,15 @@ import Fade from '../../src/renders/fade';
 
 
 describe('test fade render', () => {
-    const slide;
-    const mockSwiper;
+    let slide;
+    let mockSwiper;
 
     beforeEach(() => {
         slide = new Fade();
         mockSwiper = {
             axis: 'Y',
-            offset: {
-                Y: -65
-            },
-            sideLength: 650;
+            sideOffset: -65,
+            sideLength: 650
         };
     });
 

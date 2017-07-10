@@ -11,17 +11,15 @@ import Flip from '../../src/renders/flip';
 
 
 describe('test flip render', () => {
-    const slide;
-    const mockSwiper;
+    let slide;
+    let mockSwiper;
 
     beforeEach(() => {
         slide = new Flip();
         mockSwiper = {
             axis: 'Y',
-            offset: {
-                Y: -65
-            },
-            sideLength: 650;
+            sideOffset: -65,
+            sideLength: 650
         };
     });
 
