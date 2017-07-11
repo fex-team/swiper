@@ -11,6 +11,8 @@ import './swiper.css';
 import { Device } from './device';
 import { DeviceEvent } from './device';
 
+import Easing from './easing';
+
 import Render from './render';
 import Slide from './renders/slide';
 import Rotate from './renders/rotate';
@@ -303,18 +305,19 @@ export class Swiper {
 
         this.lastDirection = this.moveDirection;
         
-        // 1. 如果页码到底了或者到顶了，
-        // 2. 页面禁止滑动
+        // 页面禁止滑动时
         // 防止突然「先上后下」，直接将 this.offset 置为 0
         // 防止需要「等」 offset 归 0 后才能往上走
-        if (this.activePage === EMPTY_PAGE
-        || this.transition.direction === Direction.Nonward
+        if (this.transition.direction === Direction.Nonward
         || (this.transition.direction && this.transition.direction !== this.moveDirection)) {
             this.offset[this.axis] = 0;
             this.start = this.end;
         }
 
-        this.pageChange = (this.activePage !== EMPTY_PAGE);
+        // 在首页或尾页为空（非循环且回弹）时，为保证橡皮筋效果，重设时间为 300ms
+        if (this.activePage === EMPTY_PAGE) {
+            this.transition.duration = 300;
+        }
 
         const GAP = {
             Forward: 20,
@@ -345,9 +348,8 @@ export class Swiper {
         this.moving = false;
         this.log('end');
 
-        // 如果是首页或尾页，或者禁止滑动
-        if (this.activePage === EMPTY_PAGE
-        || this.transition.direction === Direction.Nonward
+        // 如果禁止滑动
+        if (this.transition.direction === Direction.Nonward
         || (this.transition.direction && this.transition.direction !== this.moveDirection)) {
             this.offset[this.axis] = 0;
         }
@@ -364,7 +366,7 @@ export class Swiper {
         // 是在沿着 axis 滑动
         let isSwipeOnTheDir: boolean = absReverseOffset < absOffset; 
         
-        if (absOffset >= threshold && isSwipeOnTheDir) {
+        if (absOffset >= threshold && isSwipeOnTheDir && this.activePage !== EMPTY_PAGE) {
             this.pageChange = true;
             this._swipeTo();
         }
@@ -565,10 +567,14 @@ export class Swiper {
 
         this.log('offset : ' + sideOffset);
 
+        let easingFn = Easing.easeOutQuad;
+        if (this.activePage === EMPTY_PAGE) {
+            easingFn = Easing.rubberBand;
+        }
 
         let transform = this.renderInstance.doRender({
             axis: axis,
-            sideOffset: this.easeOutQuad(sideOffset, this.sideLength),
+            sideOffset: easingFn(sideOffset, this.sideLength),
             sideLength: this.sideLength
         });
         
@@ -622,22 +628,5 @@ export class Swiper {
 
             this.fire('swipeChanged');
         }
-    }
-
-    public easeOutQuad(sideOffset, sideLength) {
-        let t = Math.abs(sideOffset / sideLength);
-        let y = 0.5*t*(3-t);
-
-        return this.sign(sideOffset) * y * sideLength;
-    }
-
-    private sign(x: number) {
-        x = +x;
-
-        if (x === 0 || isNaN(x)) {
-            return 0;
-        }
-
-        return x > 0 ? 1 : -1;
     }
 }
