@@ -120,7 +120,7 @@ describe('test swiper', () => {
 
             expect(swiper.offset.X).toBe(0);
             expect(swiper.offset.Y).toBe(-10);
-            expect(swiper.pageChange).toBe(true);
+            expect(swiper.pageChange).toBe(false);
 
             expect(swiper.fire).toHaveBeenCalledWith('swipeChange');
             expect(swiper.fire).toHaveBeenCalledWith('swipeStart');
@@ -202,8 +202,8 @@ describe('test swiper', () => {
             swiper.startHandler(mockStartPoint);
             swiper.moveHandler(mockDownMovingPoint);
 
-            expect(swiper.offset.Y).toBe(0);
-            expect(swiper.start).toEqual(mockDownMovingPoint);
+            expect(swiper.offset.Y).toBe(10);
+            expect(swiper.end).toEqual(mockDownMovingPoint);
             expect(swiper.pageChange).toBe(false);
         });
 
@@ -257,7 +257,7 @@ describe('test swiper', () => {
             expect(swiper.endTime).toBeUndefined();
         });
 
-        test('test if offset is 0 when activePage is EMPTY', () => {
+        test('test if rubber band works when activePage is EMPTY', () => {
             swiper = new Swiper({
                 container: <HTMLElement>document.querySelector('.outer-container'),
                 data: data
@@ -267,7 +267,7 @@ describe('test swiper', () => {
             swiper.moveHandler(mockDownMovingPoint);
             swiper.endHandler();
 
-            expect(swiper.offset.Y).toBe(0);
+            expect(swiper.offset.Y).toBe(10);
         });
 
         test('page change in moving greater than threshold', () => {
