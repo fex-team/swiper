@@ -16,5 +16,6 @@ deploy:
     - "dist/swiper.js"
   skip_cleanup: true
   on:
+    tags: true
     branch: master
     repo: fex-team/swiper
