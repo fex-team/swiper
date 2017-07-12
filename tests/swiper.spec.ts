@@ -361,6 +361,29 @@ describe('test swiper', () => {
         });
     });
 
+
+    describe('test swipePrev and swipeNext', () => {
+        test('test swipePrev', () => {
+            swiper.swipeTo = jest.fn();
+            const transition = {
+                name: 'flip'
+            };
+
+            swiper.swipePrev(transition);
+            expect(swiper.swipeTo).toBeCalledWith(0, transition);
+        });
+
+        test('test swipeNext', () => {
+            swiper.swipeTo = jest.fn();
+            const transition = {
+                name: 'flip'
+            };
+
+            swiper.swipeNext(transition);
+            expect(swiper.swipeTo).toBeCalledWith(2, transition);
+        });
+    });
+
     describe('test _swipeTo', () => {
         test('test _swipeTo when sliding', () => {
             swiper.sliding = true;
