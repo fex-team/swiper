@@ -52,7 +52,7 @@ describe('test swiper', () => {
         test('test a device event on a tag', () => {
             const mockDeviceEventOnATag = {
                 target: document.createElement('a'),
-                preventDefault: jest.fn();
+                preventDefault: jest.fn()
             };
 
             swiper.keepDefaultHandler(mockDeviceEventOnATag);
@@ -65,7 +65,7 @@ describe('test swiper', () => {
 
             const mockDeviceEventOnKeepDefault = {
                 target: $targetElement,
-                preventDefault: jest.fn();
+                preventDefault: jest.fn()
             };
 
             swiper.keepDefaultHandler(mockDeviceEventOnKeepDefault);
@@ -122,7 +122,7 @@ describe('test swiper', () => {
             expect(swiper.offset.Y).toBe(-10);
             expect(swiper.pageChange).toBe(false);
 
-            expect(swiper.fire).toHaveBeenCalledWith('swipeChange');
+            expect(swiper.fire).toHaveBeenCalledWith('swipeMoving');
             expect(swiper.fire).toHaveBeenCalledWith('swipeStart');
         });
 
