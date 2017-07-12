@@ -418,6 +418,16 @@ export class Swiper {
         this._swipeTo();
     }
 
+    public swipePrev(transition: Transition) {
+        var currentIndex = this.currentPage.index;
+        this.swipeTo(currentIndex - 1, transition);
+    }
+
+    public swipeNext(transition: Transition) {
+        var currentIndex = this.currentPage.index;
+        this.swipeTo(currentIndex + 1, transition);
+    }
+
     private _swipeTo() {
         if (this.sliding) {
             return;

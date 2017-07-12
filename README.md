@@ -21,6 +21,8 @@
 - [事件](#事件)
 - [API](#api)
     - [swipeTo](#swipeto)
+    - [swipePrev](#swipeprev)
+    - [swipeNext](#swipenext)
     - [on](#on)
     - [off](#off)
 
@@ -119,11 +121,13 @@ destroy             | 销毁实例时触发
 翻页即页码产生变化，翻到了下一页。
 
 ## API
-Swiper 提供了 4 个接口供外部调用：
+Swiper 提供了 5 个接口供外部调用：
 
 函数名|作用
 ----|----
 swipeTo | 翻到指定页面
+swipePrev | 翻到上一页
+swipeNext | 翻到下一页
 on      | 监听事件
 off     | 取消监听事件
 
@@ -145,6 +149,39 @@ swiper = new Swiper();
 swiper.swipeTo(0);
 // 翻到第 3 页，以 rotate 过渡效果
 swiper.swipeTo(3, {name: 'rotate'});
+```
+
+### swipePrev
+`swipePrev` 函数用于将页面翻到上一页，可以指定翻页过渡动画。不受页面禁止滑动配置选项的限制。
+
+#### 语法
+```javascript
+swiper.swipePrev(transition);
+```
+#### 参数
+- `transition`: \[可选\][Transition](#transition), 翻页动画，若未指定，则使用[当前翻页效果](#about-transition-priority)。
+
+#### 示例
+```javascript
+swiper = new Swiper();
+// 翻到上一页，以默认效果
+swiper.swipePrev();
+```
+### swipeNext
+`swipeNext` 函数用于将页面翻到下一页，可以指定翻页过渡动画。不受页面禁止滑动配置选项的限制。
+
+#### 语法
+```javascript
+swiper.swipeNext(transition);
+```
+#### 参数
+- `transition`: \[可选\][Transition](#transition), 翻页动画，若未指定，则使用[当前翻页效果](#about-transition-priority)。
+
+#### 示例
+```javascript
+swiper = new Swiper();
+// 翻到下一页，以 flip 过渡效果
+swiper.swipeNext({name: 'flip'});
 ```
 
 ### on 
