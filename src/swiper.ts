@@ -92,7 +92,7 @@ export class Swiper {
     static Events: string[] = [
         'swipeBeforeStart',
         'swipeStart',
-        'swipeChange',
+        'swipeMoving',
         'swipeChanged',
         'swipeRestore',
         'swipeRestored',        
@@ -291,7 +291,7 @@ export class Swiper {
             this.activePage = EMPTY_PAGE;
         }
 
-        this.fire('swipeChange');
+        this.fire('swipeMoving');
 
         // 第一次进入 moving 时触发 swipeStart 
         if (this.lastDirection === Direction.Nonward) {
@@ -409,13 +409,23 @@ export class Swiper {
             this.pageChange = false;
         }
 
-        this.transition = {...this.transition, ...transition};
+        this.transition = {...this.transition, ...this.currentPage.transition, ...transition};
         this.renderInstance = Render.getRenderInstance(this.transition.name);
 
         // 外部调用仍然需要 fire activePageChanged 事件
         this.fire('activePageChanged');
 
         this._swipeTo();
+    }
+
+    public swipePrev(transition: Transition) {
+        var currentIndex = this.currentPage.index;
+        this.swipeTo(currentIndex - 1, transition);
+    }
+
+    public swipeNext(transition: Transition) {
+        var currentIndex = this.currentPage.index;
+        this.swipeTo(currentIndex + 1, transition);
     }
 
     private _swipeTo() {

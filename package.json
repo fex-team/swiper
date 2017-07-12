@@ -20,6 +20,8 @@
     },
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|js)$",
     "collectCoverage": true,
+    "mapCoverage": true,
+    "collectCoverageFrom" : ["src/**/*.ts"],
     "coverageDirectory": "__coverage__",
     "moduleFileExtensions": [
       "ts",

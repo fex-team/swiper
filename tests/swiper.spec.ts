@@ -52,7 +52,7 @@ describe('test swiper', () => {
         test('test a device event on a tag', () => {
             const mockDeviceEventOnATag = {
                 target: document.createElement('a'),
-                preventDefault: jest.fn();
+                preventDefault: jest.fn()
             };
 
             swiper.keepDefaultHandler(mockDeviceEventOnATag);
@@ -65,7 +65,7 @@ describe('test swiper', () => {
 
             const mockDeviceEventOnKeepDefault = {
                 target: $targetElement,
-                preventDefault: jest.fn();
+                preventDefault: jest.fn()
             };
 
             swiper.keepDefaultHandler(mockDeviceEventOnKeepDefault);
@@ -122,7 +122,7 @@ describe('test swiper', () => {
             expect(swiper.offset.Y).toBe(-10);
             expect(swiper.pageChange).toBe(false);
 
-            expect(swiper.fire).toHaveBeenCalledWith('swipeChange');
+            expect(swiper.fire).toHaveBeenCalledWith('swipeMoving');
             expect(swiper.fire).toHaveBeenCalledWith('swipeStart');
         });
 
@@ -358,6 +358,29 @@ describe('test swiper', () => {
             expect(swiper.pageChange).toBeTruthy();
             expect(swiper.activePage).toEqual(swiper.$pages[2])
             expect(swiper._swipeTo).toBeCalled();
+        });
+    });
+
+
+    describe('test swipePrev and swipeNext', () => {
+        test('test swipePrev', () => {
+            swiper.swipeTo = jest.fn();
+            const transition = {
+                name: 'flip'
+            };
+
+            swiper.swipePrev(transition);
+            expect(swiper.swipeTo).toBeCalledWith(0, transition);
+        });
+
+        test('test swipeNext', () => {
+            swiper.swipeTo = jest.fn();
+            const transition = {
+                name: 'flip'
+            };
+
+            swiper.swipeNext(transition);
+            expect(swiper.swipeTo).toBeCalledWith(2, transition);
         });
     });
 
