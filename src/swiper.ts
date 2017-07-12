@@ -409,7 +409,7 @@ export class Swiper {
             this.pageChange = false;
         }
 
-        this.transition = {...this.transition, ...transition};
+        this.transition = {...this.transition, ...this.currentPage.transition, ...transition};
         this.renderInstance = Render.getRenderInstance(this.transition.name);
 
         // 外部调用仍然需要 fire activePageChanged 事件
