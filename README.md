@@ -107,7 +107,7 @@ Swiper 提供了 8 个事件，按照滑动开始到结束的顺序介绍如下�
 ----|----
 swipeBeforeStart    | 在页面滑动之前触发
 swipeStart          | 在页面开始滑动时触发
-swipeChange         | 在页面滑动时触发
+swipeMoving         | 在页面滑动时触发
 swipeChanged        | 在翻页完成时触发
 swipeRestore        | 在回弹开始时触发
 swipeRestored       | 在回弹完成时触发

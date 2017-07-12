@@ -92,7 +92,7 @@ export class Swiper {
     static Events: string[] = [
         'swipeBeforeStart',
         'swipeStart',
-        'swipeChange',
+        'swipeMoving',
         'swipeChanged',
         'swipeRestore',
         'swipeRestored',        
@@ -291,7 +291,7 @@ export class Swiper {
             this.activePage = EMPTY_PAGE;
         }
 
-        this.fire('swipeChange');
+        this.fire('swipeMoving');
 
         // 第一次进入 moving 时触发 swipeStart 
         if (this.lastDirection === Direction.Nonward) {
