@@ -535,10 +535,10 @@ export class Swiper {
         return this; 
     }
 
-    private fire(eventName: string, ...args) {
+    private fire(eventName: string, event: any = {}) {
         if (this._listeners[eventName]) {
             for (let callback of this._listeners[eventName]) {
-                let extendArgs = {...args, ...{name: eventName}};
+                let extendArgs = {...event, ...{name: eventName}};
                 callback.call(this, extendArgs);
             }
         }
