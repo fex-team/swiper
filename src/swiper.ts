@@ -265,7 +265,7 @@ export class Swiper {
         this.transition = {...this.transition, ...this.currentPage.transition};
         this.renderInstance = Render.getRenderInstance(this.transition.name);
 
-        this.fire('swipeBeforeStart');
+        this.fire('swipeStart');
     }
 
     private moveHandler(movingPosition: Point) {
@@ -299,11 +299,6 @@ export class Swiper {
         }
 
         this.fire('swipeMoving');
-
-        // 第一次进入 moving 时触发 swipeStart 
-        if (this.lastDirection === Direction.Nonward) {
-            this.fire('swipeStart');
-        }
 
         // moveDirection 反向，activePage 发生变化
         if (this.lastDirection === Direction.Nonward || this.moveDirection * this.lastDirection < 0) {

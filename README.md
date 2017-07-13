@@ -101,11 +101,10 @@ transition          | [Transition](#transition)           | `{name: 'slide', dur
 若高优先级已经设定，以高优先级的为准，若未设定，采用低一优先级的翻页效果。
 
 ## 事件<a name="swiper-events"></a>
-Swiper 提供了 8 个事件，按照滑动开始到结束的顺序介绍如下：
+Swiper 提供了 7 个事件，按照滑动开始到结束的顺序介绍如下：
 
 事件名|触发时机
 ----|----
-swipeBeforeStart    | 在页面滑动之前触发
 swipeStart          | 在页面开始滑动时触发
 swipeMoving         | 在页面滑动时触发
 swipeChanged        | 在翻页完成时触发
