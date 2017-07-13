@@ -9,6 +9,7 @@
 
 import {Swiper} from '../src/swiper';
 import Slide from '../src/renders/slide';
+import Flip from '../src/renders/flip';
 
 describe('test swiper', () => {
     document.body.innerHTML = '<div class="outer-container" style="width: 400px; height: 650px;"></div>';
@@ -35,6 +36,11 @@ describe('test swiper', () => {
         X: 100,
         Y: 110
     };
+
+    const mockRightMovingPoint = {
+        X: 110,
+        Y: 100
+    }
 
     let swiper;
 
@@ -122,6 +128,7 @@ describe('test swiper', () => {
             expect(swiper.offset.Y).toBe(-10);
             expect(swiper.pageChange).toBe(false);
 
+            expect(swiper.fire).toHaveBeenCalledWith('activePageChanged');
             expect(swiper.fire).toHaveBeenCalledWith('swipeMoving');
             expect(swiper.fire).toHaveBeenCalledWith('swipeStart');
         });
@@ -131,6 +138,21 @@ describe('test swiper', () => {
             swiper.moveHandler(mockDownMovingPoint);
             expect(swiper.offset.X).toBe(0);
             expect(swiper.offset.Y).toBe(10);
+        });
+
+        test('test a right moving event', () => {
+            swiper = new Swiper({
+                container: <HTMLElement>document.querySelector('.outer-container'),
+                data: data,
+                isVertical: false,
+                initIndex: 1,
+                keepDefaultClass: ['keep-default']
+            });
+
+            swiper.startHandler(mockStartPoint);
+            swiper.moveHandler(mockRightMovingPoint);
+            expect(swiper.offset.X).toBe(10);
+            expect(swiper.offset.Y).toBe(0);
         });
 
         test('test a none moving event', () => {
@@ -243,6 +265,21 @@ describe('test swiper', () => {
 
             expect(swiper.offset.Y).toBe(0);
             expect(swiper.start).toEqual(mockDownMovingPoint);
+        });
+
+         test('test debug option', () => {
+            swiper = new Swiper({
+                container: <HTMLElement>document.querySelector('.outer-container'),
+                data: data,
+                debug: true,
+                initIndex: 1,
+                keepDefaultClass: ['keep-default']
+            });
+
+            swiper.log = jest.fn();
+
+            swiper.startHandler(mockStartPoint);
+            expect(swiper.log).toBeCalledWith('start');
         });
     });
 
@@ -422,8 +459,9 @@ describe('test swiper', () => {
 
             swiper.on('swipeStart', callback);
             swiper.on('swipeStart', callback);
-            swiper.fire('swipeStart');
+            swiper.fire('swipeStart', {offset: {X: 0, Y:100}});
             expect(callback).toHaveBeenCalledTimes(2);
+            expect(callback).toBeCalledWith({name: 'swipeStart', offset: {X: 0, Y:100}});
         });
 
         test('swiper.off and fire function', () => {
@@ -455,6 +493,16 @@ describe('test swiper', () => {
             swiper.activePage = swiper.$pages[2];
             swiper.offset[swiper.axis] = -10;
             swiper.renderInstance = new Slide();
+
+            swiper.render();
+
+            expect(swiper.activePage.classList.contains('active')).toBeTruthy();
+        });
+
+         test('test flip render', () => {
+            swiper.activePage = swiper.$pages[2];
+            swiper.offset[swiper.axis] = -10;
+            swiper.renderInstance = new Flip();
 
             swiper.render();
 
