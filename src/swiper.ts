@@ -314,11 +314,6 @@ export class Swiper {
             this.start = this.end;
         }
 
-        // 在首页或尾页为空（非循环且回弹）时，为保证橡皮筋效果，重设时间为 300ms
-        if (this.activePage === EMPTY_PAGE) {
-            this.transition.duration = 300;
-        }
-
         const GAP = {
             Forward: 20,
             Backward: this.sideLength - 20
@@ -440,7 +435,10 @@ export class Swiper {
 
         let startTick: number = null;
         let startOffset = this.offset[this.axis];
-        let velocity = this.sideLength / this.transition.duration;
+        
+        // 在首页或尾页为空（非循环且回弹）时，为保证橡皮筋效果，重设时间为 300ms
+        let duration = this.activePage === EMPTY_PAGE ? 300 : this.transition.duration;
+        let velocity = this.sideLength / duration;
 
         const boundary = {
             Forward: {
