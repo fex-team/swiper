@@ -138,10 +138,12 @@ export class Swiper {
     private end: Point;
     private offset: Vector;
     private pageChange: boolean;
+    private activePageChanged: boolean;
     private moveDirection: Direction;    
     private lastDirection: Direction;
     private currentPage: $Page;
     private activePage: $Page;
+    private lastActivePage: $Page;
 
     private renderInstance: Render;
     // auxiliary
@@ -174,9 +176,11 @@ export class Swiper {
         this.sliding = false;
         this.moving = false;
         this.pageChange = false;
+        this.activePageChanged = false;
         this.moveDirection = Direction.Nonward;
         this.lastDirection = Direction.Nonward;
         this.activePage = EMPTY_PAGE;
+        this.lastActivePage = EMPTY_PAGE;
 
         this.start = {X: 0, Y: 0};
         this.end = {X: 0, Y: 0};
@@ -280,14 +284,17 @@ export class Swiper {
 
         if (this.offset[this.axis] < 0) {
             this.moveDirection = Direction.Forward;
+            this.lastActivePage = this.activePage;
             this.activePage = this.currentPage.next;
         }
         else if (this.offset[this.axis] > 0) {
             this.moveDirection = Direction.Backward;
+            this.lastActivePage = this.activePage;
             this.activePage = this.currentPage.prev;
         }
         else {
             this.moveDirection = Direction.Nonward;
+            this.lastActivePage = this.activePage;
             this.activePage = EMPTY_PAGE;
         }
 
@@ -301,6 +308,7 @@ export class Swiper {
         // moveDirection 反向，activePage 发生变化
         if (this.lastDirection === Direction.Nonward || this.moveDirection * this.lastDirection < 0) {
             this.fire('activePageChanged');
+            this.activePageChanged = true;
         }
 
         this.lastDirection = this.moveDirection;
@@ -563,37 +571,18 @@ export class Swiper {
     public render() {
         let axis: Axis = this.axis;
         let sideOffset: number = this.offset[axis];
-        let obsoleteActivePage: any = document.querySelector('.active');
 
-        if (obsoleteActivePage) {
-            obsoleteActivePage.classList.remove('active');
-            obsoleteActivePage.style.cssText = '';                
+        // 撤销旧样式
+        if (this.activePageChanged) {
+            if (this.lastActivePage !== EMPTY_PAGE) {
+                this.lastActivePage.classList.remove('active');
+                this.lastActivePage.style.cssText = '';
+            }
+            
+            this.activePageChanged = false;
         }
-        
-        this.currentPage.style.cssText = '';
-        this.activePage.style.cssText = '';
 
         this.log('offset : ' + sideOffset);
-
-        let easingFn = Easing.easeOutQuad;
-        if (this.activePage === EMPTY_PAGE) {
-            easingFn = Easing.rubberBand;
-        }
-
-        let transform = this.renderInstance.doRender({
-            axis: axis,
-            sideOffset: easingFn(sideOffset, this.sideLength),
-            sideLength: this.sideLength
-        });
-        
-        this.$swiper.style.cssText = transform.swiper;
-        this.currentPage.style.cssText = transform.currentPage;  
-
-        // no one could add class or cssText to EMPTY_PAGE
-        if (this.activePage !== EMPTY_PAGE) {
-            this.activePage.classList.add('active');
-            this.activePage.style.cssText = transform.activePage;                            
-        }      
 
         // 回弹
         if (this.pageChange === false && sideOffset === 0) {
@@ -602,14 +591,15 @@ export class Swiper {
             this.activePage.style.cssText = '';
             
             this.activePage.classList.remove('active')  
-            this.activePage = EMPTY_PAGE;         
+            this.activePage = EMPTY_PAGE;    
+            this.lastActivePage = EMPTY_PAGE;
 
             this.sliding = false;
             
             this.pageChange = false;
             this.lastDirection = Direction.Nonward;
 
-            this.fire('swipeRestored');            
+            return this.fire('swipeRestored');
         }
 
         // 正常翻页
@@ -625,6 +615,7 @@ export class Swiper {
             
             this.currentPage = this.activePage;
             this.activePage = EMPTY_PAGE;
+            this.lastActivePage = EMPTY_PAGE;
 
             this.offset.X = 0;
             this.offset.Y = 0;
@@ -634,7 +625,32 @@ export class Swiper {
             this.pageChange = false;
             this.lastDirection = Direction.Nonward;
 
-            this.fire('swipeChanged');
+            return this.fire('swipeChanged');
         }
+
+        // 普通渲染：计算
+        let easingFn = Easing.easeOutQuad;
+        if (this.activePage === EMPTY_PAGE) {
+            easingFn = Easing.rubberBand;
+        }
+
+        let transform = this.renderInstance.doRender({
+            axis: axis,
+            sideOffset: easingFn(sideOffset, this.sideLength),
+            sideLength: this.sideLength
+        });
+        
+        // 普通渲染：应用样式
+        if (transform.swiper) {
+            this.$swiper.style.cssText = transform.swiper;        
+        }
+
+        this.currentPage.style.cssText = transform.currentPage;  
+
+        // no one could add class or cssText to EMPTY_PAGE
+        if (this.activePage !== EMPTY_PAGE) {
+            this.activePage.classList.add('active');
+            this.activePage.style.cssText = transform.activePage;                            
+        }      
     }
 }
