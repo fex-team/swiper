@@ -138,9 +138,7 @@ export class Swiper {
     private end: Point;
     private offset: Vector;
     private pageChange: boolean;
-    private activePageChanged: boolean;
-    private moveDirection: Direction;    
-    private lastDirection: Direction;
+    private moveDirection: Direction;
     private currentPage: $Page;
     private activePage: $Page;
     private lastActivePage: $Page;
@@ -176,9 +174,7 @@ export class Swiper {
         this.sliding = false;
         this.moving = false;
         this.pageChange = false;
-        this.activePageChanged = false;
         this.moveDirection = Direction.Nonward;
-        this.lastDirection = Direction.Nonward;
         this.activePage = EMPTY_PAGE;
         this.lastActivePage = EMPTY_PAGE;
 
@@ -300,13 +296,9 @@ export class Swiper {
 
         this.fire('swipeMoving');
 
-        // moveDirection 反向，activePage 发生变化
-        if (this.lastDirection === Direction.Nonward || this.moveDirection * this.lastDirection < 0) {
+        if (this.activePage !== this.lastActivePage && this.activePage !== EMPTY_PAGE) {
             this.fire('activePageChanged');
-            this.activePageChanged = true;
         }
-
-        this.lastDirection = this.moveDirection;
         
         // 页面禁止滑动时
         // 防止突然「先上后下」，直接将 this.offset 置为 0
@@ -568,13 +560,9 @@ export class Swiper {
         let sideOffset: number = this.offset[axis];
 
         // 撤销旧样式
-        if (this.activePageChanged) {
-            if (this.lastActivePage !== EMPTY_PAGE) {
-                this.lastActivePage.classList.remove('active');
-                this.lastActivePage.style.cssText = '';
-            }
-            
-            this.activePageChanged = false;
+        if (this.lastActivePage !== EMPTY_PAGE) {
+            this.lastActivePage.classList.remove('active');
+            this.lastActivePage.style.cssText = '';
         }
 
         this.log('offset : ' + sideOffset);
@@ -592,7 +580,6 @@ export class Swiper {
             this.sliding = false;
             
             this.pageChange = false;
-            this.lastDirection = Direction.Nonward;
 
             return this.fire('swipeRestored');
         }
@@ -618,7 +605,6 @@ export class Swiper {
             this.sliding = false;
 
             this.pageChange = false;
-            this.lastDirection = Direction.Nonward;
 
             return this.fire('swipeChanged');
         }
