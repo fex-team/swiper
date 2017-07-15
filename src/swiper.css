@@ -27,9 +27,11 @@
 .lg-swiper .lg-swiper-page.current{
 	z-index: 5;
 	display: block;
+	will-change: transform;
 }
 
 .lg-swiper .lg-swiper-page.active{
 	z-index: 4;
 	display: block;
+	will-change: transform;
 }
