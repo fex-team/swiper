@@ -32,6 +32,7 @@ export class Device {
     public endEvent: string;
     public cancelEvent: string;
     public resizeEvent: string;
+    public transitionEvent: string;
 
     constructor(global) {
         this.hasTouch = !!(('ontouchstart' in global && !/Mac OS X /.test(global.navigator.userAgent))
@@ -41,6 +42,7 @@ export class Device {
         this.moveEvent = this.hasTouch ? 'touchmove' : 'mousemove';
         this.endEvent = this.hasTouch ? 'touchend' : 'mouseup';
         this.cancelEvent = this.hasTouch ? 'touchcancel' : 'mouseout';
+        this.transitionEvent = this.getTransitionEvent();
 
         // orientationchange also trigger resize
         this.resizeEvent = 'resize'
@@ -83,6 +85,22 @@ export class Device {
         return {
             X: undefined,
             Y: undefined
+        }
+    }
+
+    private getTransitionEvent() {
+        let el = document.createElement('fakeelement');
+        let transitions = {
+            'transition':'transitionend',
+            'OTransition':'oTransitionEnd',
+            'MozTransition':'transitionend',
+            'WebkitTransition':'webkitTransitionEnd'
+        }
+
+        for (let t in transitions) {
+            if (el.style[t] !== undefined) {
+                return transitions[t];
+            }
         }
     }
 }

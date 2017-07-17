@@ -9,13 +9,9 @@
 
 
 import Render from '../render';
+import { EMPTY_PAGE, OPPSITE } from '../constant';
 
 type Sign = 0 | -1 | 1;
-
-const OPPSITE:any = {
-    X: 'Y',
-    Y: 'X'
-}
 
 export default class Card extends Render {
 
@@ -26,11 +22,16 @@ export default class Card extends Render {
         
         const scaleAxis = OPPSITE[axis];
         const scaleRatio = 1 - 0.2 * Math.abs(sideOffset / sideLength);
-        const sign: Sign = this.sign(sideOffset);
+        const moveDirection = this.sign(swiper.sideOffset);
 
-        return {
-            currentPage: `-webkit-transform: translateZ(0) scale${scaleAxis}(${scaleRatio}) translate${axis}(${sideOffset}px);`,
-            activePage: `-webkit-transform: translateZ(0) translate${axis}(${sideOffset - sign * sideLength}px);`
-        };
+        // compute
+        const currentTransform = `translateZ(0) scale${scaleAxis}(${scaleRatio}) translate${axis}(${sideOffset}px)`;
+        const activeTransform = `translateZ(0) translate${axis}(${sideOffset - moveDirection * sideLength}px)`;
+
+        // apply
+        swiper.currentPage.style.webkitTransform = currentTransform;
+        if (swiper.activePage !== EMPTY_PAGE) {
+            swiper.activePage.style.webkitTransform = activeTransform;
+        }
     }
 }

@@ -9,8 +9,7 @@
 
 
 import Render from '../render';
-
-type Sign = 0 | -1 | 1;
+import { EMPTY_PAGE } from '../constant';
 
 export default class Slide extends Render {
 
@@ -18,11 +17,14 @@ export default class Slide extends Render {
         const axis = swiper.axis;
         const sideOffset: number = swiper.sideOffset;
         const sideLength = swiper.sideLength;
-        const sign: Sign = this.sign(sideOffset);
+        const moveDirection = this.sign(sideOffset);
 
-        return {
-            currentPage: `-webkit-transform: translateZ(0) translate${axis}(${sideOffset}px);`,
-            activePage: `-webkit-transform: translateZ(0) translate${axis}(${sideOffset - sign * sideLength}px);`
-        };
+        const currentTransform = `translateZ(0) translate${axis}(${sideOffset}px)`;
+        const activeTransform = `translateZ(0) translate${axis}(${sideOffset - moveDirection * sideLength}px)`;
+
+        swiper.currentPage.style.webkitTransform = currentTransform;
+        if (swiper.activePage !== EMPTY_PAGE) {
+            swiper.activePage.style.webkitTransform = activeTransform;
+        }
     }
 }

@@ -9,14 +9,9 @@
 
 
 import Render from '../render';
+import { EMPTY_PAGE, OPPSITE } from '../constant';
 
 type Sign = 0 | -1 | 1;
-
-const OPPSITE:any = {
-    X: 'Y',
-    Y: 'X'
-}
-
 
 export default class Flip extends Render {
     
@@ -28,12 +23,20 @@ export default class Flip extends Render {
 
         const rotateSign: Sign = axis === 'Y' ? -1 : 1;
 
-        const cssText = '-webkit-backface-visibility:hidden;';
+        // compute
+        const swiperCss = `-webkit-perspective:${sideLength * 4}px;-webkit-transform-style:flat;`;
+        const currentTransform = `translateZ(${sideLength / 2}px) rotate${rotateAxis}(${rotateSign * 180 * sideOffset / sideLength}deg) scale(0.875)`;
+        const activeTransform = `translateZ(${sideLength / 2}px) rotate${rotateAxis}(${rotateSign * 180 * (sideOffset / sideLength + 1) }deg) scale(0.875)`;
 
-        return {
-            swiper: `-webkit-perspective:${sideLength * 4}px;-webkit-transform-style:flat;`,
-            currentPage: `${cssText}-webkit-transform: translateZ(${sideLength / 2}px) rotate${rotateAxis}(${rotateSign * 180 * sideOffset / sideLength}deg) scale(0.875);`,
-            activePage: `${cssText}-webkit-transform: translateZ(${sideLength / 2}px) rotate${rotateAxis}(${rotateSign * 180 * (sideOffset / sideLength + 1) }deg) scale(0.875);z-index: 7;`
+        // apply
+        swiper.$swiper.style.cssText = swiperCss;
+
+        swiper.currentPage.style.webkitBackfaceVisibility = 'hidden';
+        swiper.currentPage.style.webkitTransform = currentTransform;
+        if (swiper.activePage !== EMPTY_PAGE) {
+            swiper.activePage.style.webkitBackfaceVisibility = 'hidden';
+            swiper.activePage.style.webkitTransform = activeTransform;
+            swiper.activePage.style.zIndex = 7;
         }
     }
 }

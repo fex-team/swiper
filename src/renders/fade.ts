@@ -8,7 +8,7 @@
  */
 
 import Render from '../render';
-
+import { EMPTY_PAGE } from '../constant';
 
 export default class Fade extends Render {
 
@@ -17,9 +17,10 @@ export default class Fade extends Render {
         const sideOffset: number = swiper.sideOffset;
         const sideLength = swiper.sideLength;
 
-        return {
-            currentPage: `opacity: ${1 - Math.abs(sideOffset / sideLength)};`,
-            activePage: `opacity: ${Math.abs(sideOffset / sideLength)};`
-        };
+        // apply
+        swiper.currentPage.style.opacity = 1 - Math.abs(sideOffset / sideLength);
+        if (swiper.activePage !== EMPTY_PAGE) {
+            swiper.activePage.style.opacity = Math.abs(sideOffset / sideLength);
+        }
     }
 }

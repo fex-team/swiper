@@ -11,13 +11,9 @@
 
 
 import Render from '../render';
+import { EMPTY_PAGE, OPPSITE } from '../constant';
 
 type Sign = 0 | -1 | 1;
-
-const OPPSITE:any = {
-    X: 'Y',
-    Y: 'X'
-}
 
 export default class Dumi extends Render {
 
@@ -29,11 +25,16 @@ export default class Dumi extends Render {
         const scaleAxis = OPPSITE[axis];
         const currentRatio = 1 - 0.4 * Math.min(Math.abs(sideOffset / sideLength), 0.5);
         const activeRatio = 0.8 + 0.4 * Math.min(Math.abs(sideOffset / sideLength), 0.5)
-        const sign: Sign = this.sign(sideOffset);
+        const moveDirection = this.sign(sideOffset);
 
-        return {
-            currentPage: `-webkit-transform: translateZ(0) translate${axis}(${sideOffset}px) scale(${currentRatio});`,
-            activePage: `-webkit-transform: translateZ(0) translate${axis}(${sideOffset - sign * sideLength}px) scale(${activeRatio});`
-        };
+        // compute
+        const currentTransform = `translateZ(0) translate${axis}(${sideOffset}px) scale(${currentRatio})`;
+        const activeTransform = `translateZ(0) translate${axis}(${sideOffset - moveDirection * sideLength}px) scale(${activeRatio})`;
+
+        // apply
+        swiper.currentPage.style.webkitTransform = currentTransform;
+        if (swiper.activePage !== EMPTY_PAGE) {
+            swiper.activePage.style.webkitTransform = activeTransform;
+        }
     }
 }

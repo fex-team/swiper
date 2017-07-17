@@ -10,12 +10,9 @@
 
 import Render from '../render';
 
-type Sign = 0 | -1 | 1;
+import { EMPTY_PAGE, OPPSITE } from '../constant';
 
-const OPPSITE:any = {
-    X: 'Y',
-    Y: 'X'
-}
+type Sign = 0 | -1 | 1;
 
 
 export default class Rotate extends Render {
@@ -26,13 +23,19 @@ export default class Rotate extends Render {
         const sideLength = swiper.sideLength;                
         const rotateAxis = OPPSITE[axis];
 
-        const sign: Sign = this.sign(sideOffset);
+        const moveDirection = this.sign(sideOffset);
         const rotateSign: Sign = axis === 'Y' ? -1 : 1;
 
-        return {
-            swiper: `-webkit-perspective:${sideLength * 4}px;-webkit-transform-style:preserve-3d;`,
-            currentPage: `-webkit-transform: rotate${rotateAxis}(${rotateSign * 90 * sideOffset / sideLength}deg) translateZ(${0.889 * sideLength / 2}px) scale(0.889);`,
-            activePage: `-webkit-transform: rotate${rotateAxis}(${rotateSign * 90 * (sideOffset / sideLength - sign)}deg) translateZ(${0.889 * sideLength / 2}px) scale(0.889);`,
+        // compute
+        const swiperCss = `-webkit-perspective:${sideLength * 4}px;-webkit-transform-style:preserve-3d;`;
+        const currentTransform = `rotate${rotateAxis}(${rotateSign * 90 * sideOffset / sideLength}deg) translateZ(${0.889 * sideLength / 2}px) scale(0.889)`;
+        const activeTransform = `rotate${rotateAxis}(${rotateSign * 90 * (sideOffset / sideLength - moveDirection)}deg) translateZ(${0.889 * sideLength / 2}px) scale(0.889)`;
+
+        // apply
+        swiper.$swiper.style.cssText = swiperCss;
+        swiper.currentPage.style.webkitTransform = currentTransform;
+        if (swiper.activePage !== EMPTY_PAGE) {
+            swiper.activePage.style.webkitTransform = activeTransform;
         }
     }
 }
