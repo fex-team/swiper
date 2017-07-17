@@ -11,7 +11,6 @@
     "coveralls": "cat ./__coverage__/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "jest": {
-    "setupTestFrameworkScriptFile": "<rootDir>/tests/__setupFiles__/rAF.js",
     "transform": {
       ".ts": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },

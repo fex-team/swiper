@@ -11,6 +11,9 @@ import './swiper.css';
 import { Device } from './device';
 import { DeviceEvent } from './device';
 
+import {EMPTY_FUNCTION, EMPTY_PAGE, OPPSITE} from './constant';
+import {Direction, Axis, Point, Vector, Transition, Page, $Page, Options, Listeners} from './interface';
+
 import Easing from './easing';
 
 import Render from './render';
@@ -27,66 +30,6 @@ Render.register('flip', Flip);
 Render.register('card', Card);
 Render.register('fade', Fade);
 Render.register('dumi', Dumi);
-
-const EMPTY_FUNCTION: Function = () => {};
-const EMPTY_PAGE: $Page = <$Page>document.createElement('div');
-const OPPSITE:any = {
-    X: 'Y',
-    Y: 'X'
-}
-
-enum Direction {
-    Forward = -1,
-    Nonward = 0,
-    Backward = 1
-}
-
-type Axis = 'X' | 'Y';
-
-interface Point {
-    X: number,
-    Y: number
-}
-
-interface Vector {
-    X: number,
-    Y: number
-}
-
-interface Transition {
-    name: string;
-    duration: number;
-    direction?: Direction;
-}
-
-interface Page {
-    content: HTMLElement | string;
-    transition?: Transition;
-}
-
-interface $Page extends HTMLDivElement {
-    index: number;
-    prev: $Page;
-    next: $Page;
-    transition: Transition;
-}
-
-interface Options {
-    container?: HTMLElement;
-    data?: Page[];
-    debug?: boolean;
-    isVertical?: boolean;
-    isLoop?: boolean;    
-    initIndex?: number;
-    keepDefaultClass?: string[];
-    transition?: Transition;
-}
-
-// type Listener = (...args: any[]) => void;
-
-interface Listeners {
-    [key: string]: Function[];
-}
 
 export class Swiper {
     static Events: string[] = [
@@ -190,6 +133,7 @@ export class Swiper {
     private bindEvents() {
         this.$container.addEventListener(Swiper.Device.startEvent, this, <any>{passive: false});
 		this.$container.addEventListener(Swiper.Device.moveEvent, this, <any>{passive: false});
+        this.$container.addEventListener(Swiper.Device.transitionEvent, this, <any>{passive: false});
 		window.addEventListener(Swiper.Device.endEvent, this, <any>{passive: false});
         window.addEventListener(Swiper.Device.resizeEvent, this, false);
     }
@@ -197,6 +141,7 @@ export class Swiper {
     private unbindEvents() {
         this.$container.removeEventListener(Swiper.Device.startEvent, this, <any>{passive: false});
 		this.$container.removeEventListener(Swiper.Device.moveEvent, this, <any>{passive: false});
+        this.$container.removeEventListener(Swiper.Device.transitionEvent, this, <any>{passive: false});
 		window.removeEventListener(Swiper.Device.endEvent, this, <any>{passive: false});
         window.removeEventListener(Swiper.Device.resizeEvent, this, false);
     }
@@ -226,6 +171,9 @@ export class Swiper {
             case Swiper.Device.resizeEvent:
                 this.resizeHandler();
                 break;
+             case Swiper.Device.transitionEvent:
+                this.transitionEndHandler(deviceEvent);
+                break;    
             default:
                 break;
         } 
@@ -319,8 +267,7 @@ export class Swiper {
         if (this.moveDirection * this.end[this.axis] > this.moveDirection * GAP[directionKey]) {
             let logStr = this.moveDirection === Direction.Forward ? '<--- near edge' : 'near edge --->';
             this.log(logStr);
-            this.endHandler();
-            
+            return this.endHandler();
         }
 
         // activePage 为 EMPTY_PAGE 需要渲染，比如快速滑动最后一帧            
@@ -361,7 +308,6 @@ export class Swiper {
             this._swipeTo();
         }
         else {
-            this.moveDirection = -1 * this.moveDirection;
             this.pageChange = false;
             this._swipeTo();
             this.fire('swipeRestore');
@@ -374,7 +320,48 @@ export class Swiper {
         }
     }
 
+    private transitionEndHandler(event?: DeviceEvent) {
+        if (event && event.target !== this.currentPage) {
+			return;
+        }
+        
+        this.$swiper.style.cssText = '';
+        this.currentPage.style.cssText = '';
+        this.activePage.style.cssText = '';
+
+        // 回弹
+        if (this.pageChange === false) {
+            this.activePage.classList.remove('active')  
+
+            this.fire('swipeRestored');
+        }
+        // 正常翻页
+        else {
+            this.currentPage.classList.remove('current');            
+            this.activePage.classList.remove('active')            
+
+            this.activePage.classList.add('current');
+            
+            this.currentPage = this.activePage;
+
+            this.fire('swipeChanged');
+        }
+
+        this.activePage = EMPTY_PAGE;    
+        this.lastActivePage = EMPTY_PAGE;
+        
+        this.offset.X = 0;
+        this.offset.Y = 0;
+
+        this.sliding = false;
+        this.pageChange = false;
+    }
+
     public swipeTo(toIndex: number, transition: Transition) {
+        if (this.sliding) {
+            return;
+        }
+
         let currentIndex = this.currentPage.index;
         this.moveDirection = Direction.Nonward;
         this.pageChange = true;
@@ -387,15 +374,11 @@ export class Swiper {
             this.moveDirection = Direction.Backward;
         }
 
-        this.offset[this.axis] = 1 * this.moveDirection;
-
         let activeIndex = this.isLoop ? (toIndex + this.data.length) % this.data.length : toIndex;
         this.activePage = this.$pages[activeIndex] || EMPTY_PAGE;
 
         // if the same, do nothing
         if (activeIndex === currentIndex || this.activePage === EMPTY_PAGE) {
-            this.moveDirection = Direction.Nonward;
-            this.offset[this.axis] = 0;            
             this.pageChange = false;
         }
 
@@ -404,6 +387,7 @@ export class Swiper {
 
         // 外部调用仍然需要 fire activePageChanged 事件
         this.fire('activePageChanged');
+        this.render();
 
         this._swipeTo();
     }
@@ -425,50 +409,29 @@ export class Swiper {
 
         this.sliding = true;
 
-        let requestAnimationFrame: Function = window.requestAnimationFrame
-        || window.webkitRequestAnimationFrame;
-
-        let startTick: number = null;
-        let startOffset = this.offset[this.axis];
-        
-        // 在首页或尾页为空（非循环且回弹）时，为保证橡皮筋效果，重设时间为 300ms
         let duration = this.activePage === EMPTY_PAGE ? 300 : this.transition.duration;
-        let velocity = this.sideLength / duration;
+        let elapsedTime = Math.abs(this.offset[this.axis]) / this.sideLength * duration;
+        let remainingTime = duration - elapsedTime;
 
-        const boundary = {
-            Forward: {
-                unSwipe: 0,
-                swipe: -this.sideLength
-            },
-            Backward: {
-                unSwipe: 0,
-                swipe: this.sideLength
-            },
-            Nonward: 0
-        };
+        let animateTime = this.pageChange ? remainingTime : elapsedTime;
+        let endOffset = this.pageChange ? this.moveDirection * this.sideLength : 0;
 
-        let type = this.pageChange ? 'swipe' : 'unSwipe';
-        let b = boundary[Direction[this.moveDirection]][type] || 0;
-
-        function step(timestamp) {
-            if (startTick === null) {
-                startTick = timestamp;
-            }
-
-            this.offset[this.axis] = startOffset + (timestamp - startTick) * this.moveDirection * velocity;
-            if (this.moveDirection * this.offset[this.axis] < this.moveDirection * b) {
-                this.log(`${ type } rendering...`)
-                this.render();
-                requestAnimationFrame(step.bind(this));
-            }
-            else {
-                // the last frame
-                this.offset[this.axis] = b;
-                this.render();
-            }
+        if (animateTime === 0) {
+            return this.transitionEndHandler();
         }
 
-        requestAnimationFrame(step.bind(this));
+        // force the animation works
+        setTimeout(function () {
+            this.currentPage.style.webkitTransition = `ease-out ${animateTime}ms`;
+            if (this.activePage !== EMPTY_PAGE) {
+                this.activePage.style.webkitTransition = `ease-out ${animateTime}ms`;
+            }
+
+            // set final offset
+            this.offset[this.axis] = endOffset;
+
+            this.render();       
+        }.bind(this), 30);
     }
 
     private initRender() {
@@ -556,58 +519,17 @@ export class Swiper {
     }
 
     public render() {
-        let axis: Axis = this.axis;
-        let sideOffset: number = this.offset[axis];
-
         // 撤销旧样式
-        if (this.lastActivePage !== EMPTY_PAGE) {
+        if (this.lastActivePage !== this.activePage) {
             this.lastActivePage.classList.remove('active');
             this.lastActivePage.style.cssText = '';
+
+            if (this.activePage !== EMPTY_PAGE) {
+                this.activePage.classList.add('active');            
+            }
         }
 
-        this.log('offset : ' + sideOffset);
-
-        // 回弹
-        if (this.pageChange === false && sideOffset === 0) {
-            this.$swiper.style.cssText = '';
-            this.currentPage.style.cssText = '';
-            this.activePage.style.cssText = '';
-            
-            this.activePage.classList.remove('active')  
-            this.activePage = EMPTY_PAGE;    
-            this.lastActivePage = EMPTY_PAGE;
-
-            this.sliding = false;
-            
-            this.pageChange = false;
-
-            return this.fire('swipeRestored');
-        }
-
-        // 正常翻页
-        else if (this.pageChange === true && sideOffset === this.moveDirection * this.sideLength) {
-            this.$swiper.style.cssText = '';
-            this.currentPage.style.cssText = '';
-            this.activePage.style.cssText = '';
-            
-            this.currentPage.classList.remove('current');            
-            this.activePage.classList.remove('active')            
-
-            this.activePage.classList.add('current');
-            
-            this.currentPage = this.activePage;
-            this.activePage = EMPTY_PAGE;
-            this.lastActivePage = EMPTY_PAGE;
-
-            this.offset.X = 0;
-            this.offset.Y = 0;
-
-            this.sliding = false;
-
-            this.pageChange = false;
-
-            return this.fire('swipeChanged');
-        }
+        this.log('offset : ' + this.offset[this.axis]);
 
         // 普通渲染：计算
         let easingFn = Easing.easeOutQuad;
@@ -615,23 +537,14 @@ export class Swiper {
             easingFn = Easing.rubberBand;
         }
 
-        let transform = this.renderInstance.doRender({
-            axis: axis,
-            sideOffset: easingFn(sideOffset, this.sideLength),
-            sideLength: this.sideLength
+        this.renderInstance.doRender({
+            axis: this.axis,
+            moveDirection: this.moveDirection,
+            sideOffset: easingFn(this.offset[this.axis], this.sideLength),
+            sideLength: this.sideLength,
+            $swiper: this.$swiper,
+            currentPage: this.currentPage,
+            activePage: this.activePage
         });
-        
-        // 普通渲染：应用样式
-        if (transform.swiper) {
-            this.$swiper.style.cssText = transform.swiper;        
-        }
-
-        this.currentPage.style.cssText = transform.currentPage;  
-
-        // no one could add class or cssText to EMPTY_PAGE
-        if (this.activePage !== EMPTY_PAGE) {
-            this.activePage.classList.add('active');
-            this.activePage.style.cssText = transform.activePage;                            
-        }      
     }
 }

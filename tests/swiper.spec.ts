@@ -10,6 +10,8 @@
 import {Swiper} from '../src/swiper';
 import Slide from '../src/renders/slide';
 import Flip from '../src/renders/flip';
+import Easing from '../src/easing';
+import {EMPTY_PAGE} from '../src/constant';
 
 describe('test swiper', () => {
     document.body.innerHTML = '<div class="outer-container" style="width: 400px; height: 650px;"></div>';
@@ -44,6 +46,8 @@ describe('test swiper', () => {
 
     let swiper;
 
+    jest.useFakeTimers();    
+
     beforeEach(() => {
         swiper = new Swiper({
             container: <HTMLElement>document.querySelector('.outer-container'),
@@ -51,6 +55,113 @@ describe('test swiper', () => {
             initIndex: 1,
             keepDefaultClass: ['keep-default']
         });
+    });
+
+    describe('test handleEvent', () => {
+
+        test('test mousedown left button event', () => {
+            let event = {
+                type: 'mousedown',
+                button: 0,
+                preventDefault: jest.fn()
+            };
+            swiper.keepDefaultHandler = jest.fn();
+            swiper.startHandler = jest.fn();
+
+            swiper.handleEvent(event);
+
+            expect(swiper.keepDefaultHandler).toBeCalled();
+            expect(swiper.startHandler).toBeCalled();
+        });
+
+        test('test mousedown right button event', () => {
+            let event = {
+                type: 'mousedown',
+                button: 1,
+                preventDefault: jest.fn()
+            };
+            swiper.keepDefaultHandler = jest.fn();
+            swiper.startHandler = jest.fn();
+
+            swiper.handleEvent(event);
+
+            expect(swiper.keepDefaultHandler).not.toBeCalled();
+            expect(swiper.startHandler).not.toBeCalled();
+        });
+
+        test('test touch start event', () => {
+            let event = {
+                type: 'touchstart',
+                preventDefault: jest.fn()
+            };
+            swiper.keepDefaultHandler = jest.fn();
+            swiper.startHandler = jest.fn();
+
+            swiper.handleEvent(event);
+
+            expect(swiper.keepDefaultHandler).toBeCalled();
+            expect(swiper.startHandler).toBeCalled();
+        });
+
+        test('test touch move event', () => {
+            let event = {
+                type: Swiper.Device.moveEvent,
+                preventDefault: jest.fn()
+            };
+            swiper.keepDefaultHandler = jest.fn();
+            swiper.moveHandler = jest.fn();
+
+            swiper.handleEvent(event);
+
+            expect(swiper.keepDefaultHandler).toBeCalled();
+            expect(swiper.moveHandler).toBeCalled();
+        });
+
+        test('test touch end event', () => {
+            let event = {
+                type: Swiper.Device.endEvent,
+                preventDefault: jest.fn()
+            };
+            swiper.endHandler = jest.fn();
+
+            swiper.handleEvent(event);
+
+            expect(swiper.endHandler).toBeCalled();
+        });
+
+        test('test resize event', () => {
+            let event = {
+                type: Swiper.Device.resizeEvent,
+                preventDefault: jest.fn()
+            };
+            swiper.resizeHandler = jest.fn();
+
+            swiper.handleEvent(event);
+
+            expect(swiper.resizeHandler).toBeCalled();
+        });
+
+        test('test transition end event', () => {
+            let event = {
+                type: Swiper.Device.transitionEvent,
+                preventDefault: jest.fn()
+            };
+            swiper.transitionEndHandler = jest.fn();
+
+            swiper.handleEvent(event);
+
+            expect(swiper.transitionEndHandler).toBeCalled();
+        });
+
+        test('test keyboard event', () => {
+            let event = {
+                type: 'keydown',
+                preventDefault: jest.fn()
+            };
+
+            swiper.handleEvent(event);
+        });
+
     });
 
     describe('test preventDefaultHandler', () => {
@@ -114,7 +225,6 @@ describe('test swiper', () => {
             expect(swiper.moving).toBe(false);
         });
     });
-
 
     describe('test moveHandler', () => {
         test('test a up moving event', () => {
@@ -330,9 +440,111 @@ describe('test swiper', () => {
             swiper.moveHandler(mockDownMovingPoint);
             swiper.endHandler();
 
-            expect(swiper.moveDirection).toBe(-1);
             expect(swiper.pageChange).toBe(false);
             expect(swiper._swipeTo).toBeCalled();
+        });
+    });
+
+    describe('test resizeHandler', () => {
+        test('test normal resize', () => {
+            swiper.sliding = false;
+            swiper.moving = false;
+            swiper.axis = 'Y'
+            swiper.$container = {
+                clientHeight: 670
+            };
+
+            swiper.resizeHandler();
+
+            expect(swiper.sideLength).toBe(670);
+        });
+
+        test('test normal resize', () => {
+            swiper.sliding = false;
+            swiper.moving = false;
+            swiper.axis = 'X'
+            swiper.$container = {
+                clientWidth: 420
+            };
+
+            swiper.resizeHandler();
+
+            expect(swiper.sideLength).toBe(420);
+        });
+
+        test('test resize when sliding', () => {
+            swiper.sliding = true;
+            swiper.moving = false;
+            swiper.axis = 'X'
+            swiper.sideLength = 400;
+            swiper.$container = {
+                clientWidth: 420
+            };
+
+            swiper.resizeHandler();
+
+            expect(swiper.sideLength).toBe(400);
+        });
+
+        test('test resize when moving', () => {
+            swiper.sliding = false;
+            swiper.moving = true;
+            swiper.axis = 'X'
+            swiper.sideLength = 400;
+            swiper.$container = {
+                clientWidth: 420
+            };
+
+            swiper.resizeHandler();
+
+            expect(swiper.sideLength).toBe(400);
+        });
+    });
+
+    describe('test transitionEndHandler', () => {
+        test('test when transition end target is not currentPage', () => {
+            let event = {
+                target: EMPTY_PAGE
+            };
+            swiper.pageChange = true;
+
+            swiper.transitionEndHandler(event);
+
+            // do nothing
+            expect(swiper.pageChange).toBeTruthy();
+        });
+
+        test('test page change is false', () => {
+            swiper.currentPage = swiper.$pages[1];
+            swiper.activePage = swiper.$pages[0];
+            let event = {
+                target: swiper.currentPage
+            };
+            swiper.pageChange = false;
+            swiper.fire = jest.fn();
+
+            swiper.transitionEndHandler(event);
+
+            expect(swiper.fire).toBeCalledWith('swipeRestored');
+            expect(swiper.currentPage.classList.contains('current')).toBeTruthy();
+            expect(swiper.pageChange).toBeFalsy();
+            expect(swiper.activePage).toBe(EMPTY_PAGE);
+        });
+
+        test('test page change is true', () => {
+            swiper.currentPage = swiper.$pages[1];
+            swiper.activePage = swiper.$pages[0];
+            let event = {
+                target: swiper.currentPage
+            };
+            swiper.pageChange = true;
+            swiper.fire = jest.fn();
+
+            swiper.transitionEndHandler(event);
+
+            expect(swiper.fire).toBeCalledWith('swipeChanged');
+            expect(swiper.pageChange).toBeFalsy();
+            expect(swiper.activePage).toBe(EMPTY_PAGE);
         });
     });
 
@@ -363,7 +575,6 @@ describe('test swiper', () => {
 
             swiper.swipeTo(1);
 
-            expect(swiper.moveDirection).toBe(0);
             expect(swiper.pageChange).toBeFalsy();
             expect(swiper._swipeTo).toBeCalled();
         });
@@ -373,9 +584,8 @@ describe('test swiper', () => {
 
             swiper.swipeTo(-1);
 
-            expect(swiper.moveDirection).toBe(0);
             expect(swiper.pageChange).toBeFalsy();
-            expect(swiper.activePage).toMatchObject(document.createElement('div'));
+            expect(swiper.activePage).toBe(EMPTY_PAGE);
             expect(swiper._swipeTo).toBeCalled();
         });
 
@@ -396,8 +606,15 @@ describe('test swiper', () => {
             expect(swiper.activePage).toEqual(swiper.$pages[2])
             expect(swiper._swipeTo).toBeCalled();
         });
-    });
 
+        test('test swipe twice', () => {
+            swiper.swipeTo(0);
+            swiper.swipeTo(2);
+
+            expect(swiper.moveDirection).toBe(1);
+            expect(swiper.pageChange).toBeTruthy();
+        });
+    });
 
     describe('test swipePrev and swipeNext', () => {
         test('test swipePrev', () => {
@@ -424,32 +641,44 @@ describe('test swiper', () => {
     describe('test _swipeTo', () => {
         test('test _swipeTo when sliding', () => {
             swiper.sliding = true;
-            window.requestAnimationFrame = jest.fn();
+            swiper.render = jest.fn();
             
             swiper._swipeTo();
-            expect(window.requestAnimationFrame).toHaveBeenCalledTimes(0);
+            expect(swiper.render).not.toBeCalled();
+        });
+
+        test('test _swipeTo with transition duration is 0', () => {
+            swiper.offset[swiper.axis] = 0;
+            swiper.sideLength = 650;
+            swiper.transition = {
+                duration : 0
+            };
+            swiper.activePage = swiper.$pages[2];
+            swiper.pageChange = true;
+            swiper.render = jest.fn();
+            swiper.transitionEndHandler = jest.fn();
+
+            swiper._swipeTo();
+
+            expect(swiper.transitionEndHandler).toBeCalled();
+
+            jest.runAllTimers();
+            expect(swiper.render).not.toBeCalled();
         });
 
         test('test up swipe _swipeTo', () => {
-            window.requestAnimationFrame = jest.fn();
-
             swiper.offset[swiper.axis] = -300;
             swiper.pageChange = true;
             swiper.moveDirection = -1;
+            swiper.render = jest.fn();
 
             swiper._swipeTo();
-            expect(window.requestAnimationFrame).toBeCalled();
-        });
 
-        test('test last frame of swipe _swipeTo', () => {
-            window.requestAnimationFrame = jest.fn();
+            expect(swiper.render).not.toBeCalled();
 
-            swiper.offset[swiper.axis] = -651;
-            swiper.pageChange = true;
-            swiper.moveDirection = -1;
-
-            swiper._swipeTo();
-            expect(window.requestAnimationFrame).toHaveBeenCalledTimes(1);
+            // due to setTimeout in _swipeTo            
+            jest.runAllTimers();
+            expect(swiper.render).toBeCalled();
         });
     });
 
@@ -471,17 +700,17 @@ describe('test swiper', () => {
             swiper.off('swipeStart', callback);
             swiper.off('anotherEvent', callback);
             swiper.fire('swipeStart');
-            expect(callback).toHaveBeenCalledTimes(0);
+            expect(callback).not.toBeCalled();
         });
     });
 
     describe('test swiper destroy', () => {
         test('swiper.on and fire function', () => {
-            swiper.unbindEvents = jest.fn();
+            swiper.$container.removeEventListener = jest.fn();
             swiper.fire = jest.fn();
 
             swiper.destroy();
-            expect(swiper.unbindEvents).toBeCalled();
+            expect(swiper.$container.removeEventListener).toBeCalled();
             expect(swiper._listeners).toEqual({});
             expect(swiper.$container.contains(swiper.$swiper)).toBeFalsy();
             expect(swiper.fire).toHaveBeenCalledWith('destroy');
@@ -490,46 +719,55 @@ describe('test swiper', () => {
 
     describe('test render function', () => {
         test('test normal render', () => {
+            swiper.lastActivePage = EMPTY_PAGE;
             swiper.activePage = swiper.$pages[2];
             swiper.offset[swiper.axis] = -10;
             swiper.renderInstance = new Slide();
 
             swiper.render();
 
+            expect(swiper.lastActivePage.classList.contains('active')).toBeFalsy();
             expect(swiper.activePage.classList.contains('active')).toBeTruthy();
         });
 
-         test('test flip render', () => {
-            swiper.activePage = swiper.$pages[2];
-            swiper.offset[swiper.axis] = -10;
-            swiper.renderInstance = new Flip();
-
-            swiper.render();
-
-            expect(swiper.activePage.classList.contains('active')).toBeTruthy();
-        });
-
-        test('test unswipe end render', () => {
-            swiper.pageChange = false;
-            swiper.offset[swiper.axis] = 0;
-            swiper.renderInstance = new Slide();
-
-            swiper.render();
-
-            expect(swiper.activePage.classList.contains('active')).toBeFalsy();
-        });
-
-        test('test swipe end render', () => {
-            swiper.pageChange = true;
+        test('test render with rubber band', () => {
+            swiper.lastActivePage = swiper.$pages[2];
+            swiper.activePage = EMPTY_PAGE;
             swiper.moveDirection = 1;
-            swiper.offset[swiper.axis] = 650;
             swiper.sideLength = 650;
+            swiper.offset[swiper.axis] = 10;
             swiper.renderInstance = new Slide();
+            swiper.renderInstance.doRender = jest.fn();
 
             swiper.render();
 
-            expect(swiper.activePage.classList.contains('current')).toBeTruthy();
+            expect(swiper.lastActivePage.classList.contains('active')).toBeFalsy();
+            expect(swiper.activePage.classList.contains('active')).toBeFalsy();
+
+            let rubberOffset = Easing.rubberBand(10, 650);
+            expect(swiper.renderInstance.doRender).toBeCalledWith({
+                axis: 'Y',
+                moveDirection: 1,
+                sideOffset: rubberOffset,
+                sideLength: 650,
+                $swiper: swiper.$swiper,
+                currentPage: swiper.$pages[1],
+                activePage: EMPTY_PAGE
+            });
         });
     });
+
+    describe('test initRender', () => {
+        test('test with init dom', () => {
+            swiper = new Swiper({
+                container: <HTMLElement>document.querySelector('.outer-container'),
+                data: [{
+                    content: EMPTY_PAGE
+                }]
+            });
+
+            expect(swiper.$pages.length).toBe(1);
+        });
+    })
 
 });

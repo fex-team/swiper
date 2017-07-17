@@ -8,24 +8,60 @@
  */
 
 import Dumi from '../../src/renders/dumi';
+import { EMPTY_PAGE } from '../../src/constant';
 
 describe('test dumi render', () => {
     let slide;
     let mockSwiper;
+    let style;
 
     beforeEach(() => {
         slide = new Dumi();
-        mockSwiper = {
-            axis: 'Y',
-            sideOffset: -325,
-            sideLength: 650
+        style = {
+            cssText: '',
+            webkitTransfom: ''
         };
     });
 
     test('normal dumi render', () => {
-        let transform = slide.doRender(mockSwiper);
+        mockSwiper = {
+            axis: 'Y',
+            sideOffset: -325,
+            sideLength: 650,
+            $swiper: {
+                style: {...style}
+            },
+            currentPage: {
+                style: {...style}
+            },
+            activePage: {
+                style: {...style}
+            }
+        };
 
-        expect(transform.currentPage).toBe('-webkit-transform: translateZ(0) translateY(-325px) scale(0.8);');
-        expect(transform.activePage).toBe('-webkit-transform: translateZ(0) translateY(325px) scale(1);');
+        slide.doRender(mockSwiper);
+
+        expect(mockSwiper.currentPage.style.webkitTransform).toBe('translateZ(0) translateY(-325px) scale(0.8)');
+        expect(mockSwiper.activePage.style.webkitTransform).toBe('translateZ(0) translateY(325px) scale(1)');
+    });
+
+    test('normal dumi render when active page is empty', () => {
+        mockSwiper = {
+            axis: 'Y',
+            sideOffset: -325,
+            sideLength: 650,
+            $swiper: {
+                style: {...style}
+            },
+            currentPage: {
+                style: {...style}
+            },
+            activePage: EMPTY_PAGE
+        };
+
+        slide.doRender(mockSwiper);
+
+        expect(mockSwiper.currentPage.style.webkitTransform).toBe('translateZ(0) translateY(-325px) scale(0.8)');
+        expect(mockSwiper.activePage).toBe(EMPTY_PAGE);
     });
 });

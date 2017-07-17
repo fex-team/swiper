@@ -8,25 +8,61 @@
  */
 
 import Slide from '../../src/renders/slide';
+import { EMPTY_PAGE } from '../../src/constant';
 
 describe('test slide render', () => {
     let slide;
     let mockSwiper;
+    let style;
 
     beforeEach(() => {
         slide = new Slide();
-        mockSwiper = {
-            axis: 'Y',
-            sideOffset: -100,
-            sideLength: 650
+        style = {
+            cssText: '',
+            webkitTransfom: ''
         };
-
     });
 
     test('normal slide', () => {
-        let transform = slide.doRender(mockSwiper);
-        expect(transform.currentPage).toBe('-webkit-transform: translateZ(0) translateY(-100px);');
-        expect(transform.activePage).toBe('-webkit-transform: translateZ(0) translateY(550px);');
+         mockSwiper = {
+            axis: 'Y',
+            sideOffset: -100,
+            sideLength: 650,
+            $swiper: {
+                style: {...style}
+            },
+            currentPage: {
+                style: {...style}
+            },
+            activePage: {
+                style: {...style}
+            }
+        };
+        
+
+        slide.doRender(mockSwiper);
+        expect(mockSwiper.currentPage.style.webkitTransform).toBe('translateZ(0) translateY(-100px)');
+        expect(mockSwiper.activePage.style.webkitTransform).toBe('translateZ(0) translateY(550px)');
+    });
+
+    test('normal slide', () => {
+         mockSwiper = {
+            axis: 'Y',
+            sideOffset: -100,
+            sideLength: 650,
+            $swiper: {
+                style: {...style}
+            },
+            currentPage: {
+                style: {...style}
+            },
+            activePage: EMPTY_PAGE
+        };
+        
+
+        slide.doRender(mockSwiper);
+        expect(mockSwiper.currentPage.style.webkitTransform).toBe('translateZ(0) translateY(-100px)');
+        expect(mockSwiper.activePage).toBe(EMPTY_PAGE);
     });
 });
 

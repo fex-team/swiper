@@ -8,25 +8,59 @@
  */
 
 import Fade from '../../src/renders/fade';
-
+import { EMPTY_PAGE } from '../../src/constant';
 
 describe('test fade render', () => {
     let slide;
     let mockSwiper;
+    let style;
 
     beforeEach(() => {
         slide = new Fade();
-        mockSwiper = {
-            axis: 'Y',
-            sideOffset: -65,
-            sideLength: 650
+        style = {
+            opacity: ''
         };
     });
 
     test('normal fade render', () => {
-        let transform = slide.doRender(mockSwiper);
+        mockSwiper = {
+            axis: 'Y',
+            sideOffset: -65,
+            sideLength: 650,
+            $swiper: {
+                style: {...style}
+            },
+            currentPage: {
+                style: {...style}
+            },
+            activePage: {
+                style: {...style}
+            }
+        };
+
+        slide.doRender(mockSwiper);
         
-        expect(transform.currentPage).toBe('opacity: 0.9;');
-        expect(transform.activePage).toBe('opacity: 0.1;');
+        expect(mockSwiper.currentPage.style.opacity).toBe(0.9);
+        expect(mockSwiper.activePage.style.opacity).toBe(0.1);
+    });
+
+    test('normal fade render when active page is empty', () => {
+        mockSwiper = {
+            axis: 'Y',
+            sideOffset: -65,
+            sideLength: 650,
+            $swiper: {
+                style: {...style}
+            },
+            currentPage: {
+                style: {...style}
+            },
+            activePage: EMPTY_PAGE
+        };
+
+        slide.doRender(mockSwiper);
+        
+        expect(mockSwiper.currentPage.style.opacity).toBe(0.9);
+        expect(mockSwiper.activePage).toBe(EMPTY_PAGE);
     });
 });
