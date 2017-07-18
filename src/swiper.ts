@@ -402,6 +402,10 @@ export class Swiper {
         this.swipeTo(currentIndex + 1, transition);
     }
 
+    public getCurrentIndex(): number {
+        return this.currentPage.index;
+    }
+
     private _swipeTo() {
         if (this.sliding) {
             return;
