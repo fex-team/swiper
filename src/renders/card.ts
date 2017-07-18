@@ -22,7 +22,7 @@ export default class Card extends Render {
         
         const scaleAxis = OPPSITE[axis];
         const scaleRatio = 1 - 0.2 * Math.abs(sideOffset / sideLength);
-        const moveDirection = this.sign(swiper.sideOffset);
+        const moveDirection = swiper.moveDirection;
 
         // compute
         const currentTransform = `translateZ(0) scale${scaleAxis}(${scaleRatio}) translate${axis}(${sideOffset}px)`;

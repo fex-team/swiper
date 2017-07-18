@@ -23,7 +23,7 @@ export default class Rotate extends Render {
         const sideLength = swiper.sideLength;                
         const rotateAxis = OPPSITE[axis];
 
-        const moveDirection = this.sign(sideOffset);
+        const moveDirection = swiper.moveDirection;
         const rotateSign: Sign = axis === 'Y' ? -1 : 1;
 
         // compute
