@@ -28,6 +28,7 @@ describe('test card render', () => {
             axis: 'Y',
             sideOffset: -65,
             sideLength: 650,
+            moveDirection: -1,
             $swiper: {
                 style: {...style}
             },
@@ -50,6 +51,7 @@ describe('test card render', () => {
             axis: 'X',
             sideOffset: -200,
             sideLength: 400,
+            moveDirection: -1,
             $swiper: {
                 style: {...style}
             },
@@ -73,6 +75,7 @@ describe('test card render', () => {
             axis: 'X',
             sideOffset: -200,
             sideLength: 400,
+            moveDirection: -1,
             $swiper: {
                 style: {...style}
             },

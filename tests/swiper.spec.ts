@@ -53,7 +53,7 @@ describe('test swiper', () => {
             container: <HTMLElement>document.querySelector('.outer-container'),
             data: data,
             initIndex: 1,
-            keepDefaultClass: ['keep-default']
+            keepDefaultClasses: ['keep-default']
         });
     });
 
@@ -256,7 +256,7 @@ describe('test swiper', () => {
                 data: data,
                 isVertical: false,
                 initIndex: 1,
-                keepDefaultClass: ['keep-default']
+                keepDefaultClasses: ['keep-default']
             });
 
             swiper.startHandler(mockStartPoint);
@@ -383,7 +383,7 @@ describe('test swiper', () => {
                 data: data,
                 debug: true,
                 initIndex: 1,
-                keepDefaultClass: ['keep-default']
+                keepDefaultClasses: ['keep-default']
             });
 
             swiper.log = jest.fn();
