@@ -717,6 +717,13 @@ describe('test swiper', () => {
         });
     });
 
+    describe('test outer API', () => {
+        test('test getCurrentIndex', () => {
+            let currentIndex = swiper.getCurrentIndex();
+            expect(currentIndex).toBe(1);
+        });
+    })
+
     describe('test render function', () => {
         test('test normal render', () => {
             swiper.lastActivePage = EMPTY_PAGE;
