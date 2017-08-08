@@ -17,7 +17,7 @@ export default class Slide extends Render {
         const axis = swiper.axis;
         const sideOffset: number = swiper.sideOffset;
         const sideLength = swiper.sideLength;
-        const moveDirection = this.sign(sideOffset);
+        const moveDirection = swiper.moveDirection;
 
         const currentTransform = `translateZ(0) translate${axis}(${sideOffset}px)`;
         const activeTransform = `translateZ(0) translate${axis}(${sideOffset - moveDirection * sideLength}px)`;

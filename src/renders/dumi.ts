@@ -25,7 +25,7 @@ export default class Dumi extends Render {
         const scaleAxis = OPPSITE[axis];
         const currentRatio = 1 - 0.4 * Math.min(Math.abs(sideOffset / sideLength), 0.5);
         const activeRatio = 0.8 + 0.4 * Math.min(Math.abs(sideOffset / sideLength), 0.5)
-        const moveDirection = this.sign(sideOffset);
+        const moveDirection = swiper.moveDirection;
 
         // compute
         const currentTransform = `translateZ(0) translate${axis}(${sideOffset}px) scale(${currentRatio})`;

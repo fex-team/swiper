@@ -28,6 +28,7 @@ describe('test dumi render', () => {
             axis: 'Y',
             sideOffset: -325,
             sideLength: 650,
+            moveDirection: -1,
             $swiper: {
                 style: {...style}
             },
@@ -50,6 +51,7 @@ describe('test dumi render', () => {
             axis: 'Y',
             sideOffset: -325,
             sideLength: 650,
+            moveDirection: -1,
             $swiper: {
                 style: {...style}
             },

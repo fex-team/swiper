@@ -27,6 +27,7 @@ describe('test fade render', () => {
             axis: 'Y',
             sideOffset: -65,
             sideLength: 650,
+            moveDirection: -1,
             $swiper: {
                 style: {...style}
             },
@@ -49,6 +50,7 @@ describe('test fade render', () => {
             axis: 'Y',
             sideOffset: -65,
             sideLength: 650,
+            moveDirection: -1,
             $swiper: {
                 style: {...style}
             },

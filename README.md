@@ -23,6 +23,7 @@
     - [swipeTo](#swipeto)
     - [swipePrev](#swipeprev)
     - [swipeNext](#swipenext)
+    - [getCurrentIndex](#getcurrentindex)
     - [on](#on)
     - [off](#off)
 
@@ -181,6 +182,23 @@ swiper.swipeNext(transition);
 swiper = new Swiper();
 // 翻到下一页，以 flip 过渡效果
 swiper.swipeNext({name: 'flip'});
+```
+
+### getCurrentIndex
+`getCurrentIndex` 函数用于获取当前页面的序号（从 0 开始计）。
+
+#### 语法
+```javascript
+swiper.getCurrentIndex();
+```
+#### 参数
+- 无
+
+#### 示例
+```javascript
+swiper = new Swiper();
+// 获取当前页面序号
+swiper.getCurrentIndex();
 ```
 
 ### on 

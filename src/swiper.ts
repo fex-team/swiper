@@ -52,7 +52,7 @@ export class Swiper {
         isVertical: true,
         isLoop: false,
         initIndex: 0,
-        keepDefaultClass: [],
+        keepDefaultClasses: [],
         transition: {
             name: 'slide',
             duration: 800
@@ -107,7 +107,7 @@ export class Swiper {
         this.axis = options.isVertical ? 'Y' : 'X';
         this.isLoop = options.isLoop;        
         this.initIndex = options.initIndex;
-        this.keepDefaultClasses = options.keepDefaultClass;
+        this.keepDefaultClasses = options.keepDefaultClasses;
 
         this.sideLength = this.axis === 'X' ? this.$container.clientWidth : this.$container.clientHeight;
         this.transition = options.transition;
@@ -400,6 +400,10 @@ export class Swiper {
     public swipeNext(transition: Transition) {
         var currentIndex = this.currentPage.index;
         this.swipeTo(currentIndex + 1, transition);
+    }
+
+    public getCurrentIndex(): number {
+        return this.currentPage.index;
     }
 
     private _swipeTo() {

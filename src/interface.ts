@@ -42,7 +42,7 @@ export interface Options {
     isVertical?: boolean;
     isLoop?: boolean;    
     initIndex?: number;
-    keepDefaultClass?: string[];
+    keepDefaultClasses?: string[];
     transition?: Transition;
 }
 
