@@ -350,12 +350,15 @@ describe('test swiper', () => {
                     direction: 0
                 }
             });
+            swiper.fire = jest.fn();
 
             swiper.startHandler(mockStartPoint);
             swiper.moveHandler(mockDownMovingPoint);
+            swiper.endHandler();
 
             expect(swiper.offset.Y).toBe(0);
-            expect(swiper.start).toEqual(mockDownMovingPoint);
+            expect(swiper.start).toEqual(mockStartPoint);
+            expect(swiper.fire).not.toBeCalled();
         });
 
         test('test page down forbidden in moving event', () => {
@@ -369,12 +372,18 @@ describe('test swiper', () => {
                     direction: -1
                 }
             });
+            swiper.fire = jest.fn();
 
             swiper.startHandler(mockStartPoint);
             swiper.moveHandler(mockDownMovingPoint);
+            swiper.endHandler();
 
             expect(swiper.offset.Y).toBe(0);
             expect(swiper.start).toEqual(mockDownMovingPoint);
+            expect(swiper.fire).toBeCalledWith('swipeStart');
+            expect(swiper.fire).toBeCalledWith('swipeMoving');
+            expect(swiper.fire).toBeCalledWith('activePageChanged');
+            expect(swiper.fire).toBeCalledWith('swipeRestore');
         });
 
          test('test debug option', () => {

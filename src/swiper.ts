@@ -209,11 +209,15 @@ export class Swiper {
         this.transition = {...this.transition, ...this.currentPage.transition};
         this.renderInstance = Render.getRenderInstance(this.transition.name);
 
+        if (this.transition.direction === Direction.Nonward) {
+            return;
+        }
+        
         this.fire('swipeStart');
     }
 
     private moveHandler(movingPosition: Point) {
-        if (this.sliding || !this.moving) {
+        if (this.sliding || !this.moving || this.transition.direction === Direction.Nonward) {
     		return;
     	}
 
@@ -251,8 +255,7 @@ export class Swiper {
         // 页面禁止滑动时
         // 防止突然「先上后下」，直接将 this.offset 置为 0
         // 防止需要「等」 offset 归 0 后才能往上走
-        if (this.transition.direction === Direction.Nonward
-        || (this.transition.direction && this.transition.direction !== this.moveDirection)) {
+        if (this.transition.direction && this.transition.direction !== this.moveDirection) {
             this.offset[this.axis] = 0;
             this.start = this.end;
         }
@@ -278,7 +281,7 @@ export class Swiper {
     }
 
     private endHandler() {
-        if (this.sliding || !this.moving) {
+        if (this.sliding || !this.moving  || this.transition.direction === Direction.Nonward) {
     		return;
     	}
         
@@ -286,8 +289,7 @@ export class Swiper {
         this.log('end');
 
         // 如果禁止滑动
-        if (this.transition.direction === Direction.Nonward
-        || (this.transition.direction && this.transition.direction !== this.moveDirection)) {
+        if (this.transition.direction && this.transition.direction !== this.moveDirection) {
             this.offset[this.axis] = 0;
         }
 
