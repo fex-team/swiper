@@ -18,7 +18,4 @@ deploy:
   on:
     tags: true
     repo: fex-team/swiper    
-    branches:
-      only:
-      - master
-      - /^v\d+(\.\d+)+$/
+    all_branches: true
