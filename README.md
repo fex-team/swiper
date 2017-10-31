@@ -26,6 +26,10 @@
     - [getCurrentIndex](#getcurrentindex)
     - [on](#on)
     - [off](#off)
+- [贡献代码](#贡献代码)
+    - [技术栈](#技术栈)
+    - [目录结构](目录结构)
+    - [开发步骤](#开发步骤)
 
 ## 基本用法
 只需三步即可完成：
@@ -244,3 +248,31 @@ swiper.off('swipeChanged', function (e) {
     console.log(e.name + 'fired');
 });
 ```
+
+## 贡献代码
+欢迎大家为 Swiper 共享代码，开始之前，可以了解一下 Swiper 的基本原理，见[这篇文章](http://fex.baidu.com/blog/2017/10/build-a-silky-smooth-slide-library)。
+
+### 技术栈
+TypeScript + Webpack + Jest
+
+### 目录结构
+├── docs 文档
+├── examples 例子
+├── index.html 开发用到的 demo
+├── src 源码
+│   ├── constant.ts 常量定义
+│   ├── device.ts 统一设备
+│   ├── easing.ts 缓动函数
+│   ├── interface.ts 接口定义
+│   ├── render.ts render 抽象类
+│   ├── renders 支持的六种翻页效果
+│   ├── swiper.css 样式文件
+│   └── swiper.ts 主文件
+└── tests 测试文件
+
+### 开发步骤
+1. Fork 代码至自己的代码库，并 clone 到本地；
+2. `yarn`，安装依赖包，主要是开发时用的；
+3. `yarn dev`，用到的文件是 `index.html`，开发时修改保存后，会实时将 TypeScript 编译为 Javascript；
+4. `yarn test`，运行测试用例，并输出代码覆盖率；
+5. 开发完成后，在 Github 上提交 Pull Request。
