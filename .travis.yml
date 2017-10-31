@@ -17,5 +17,8 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
-    branch: master
-    repo: fex-team/swiper
+    repo: fex-team/swiper    
+    branches:
+      only:
+      - master
+      - /^v\d+(\.\d+)+$/
