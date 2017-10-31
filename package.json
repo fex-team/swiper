@@ -1,7 +1,7 @@
 {
-  "name": "swiper",
+  "name": "fex-swiper",
   "version": "1.0.0",
-  "description": "a H5 swiper",
+  "description": "a H5 swiper powered by FEX",
   "main": "src/swiper.ts",
   "repository": "http://github.com/fex-team/swiper",
   "scripts": {
