@@ -29,7 +29,7 @@
 
 ## 基本用法
 只需三步即可完成：
-1. 引入 css 和 js；
+1. 引入 js 和 css，构建好的 js 和 css [release](https://github.com/fex-team/swiper/releases) 页面；
 
 2. 创建一个容器 `div`，注意：这个容器必须是有宽度和高度（如 100% 或者 650px）；
 ```html
