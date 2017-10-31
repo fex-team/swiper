@@ -29,7 +29,9 @@
 
 ## 基本用法
 只需三步即可完成：
-1. 引入 js 和 css，构建好的 js 和 css 可以在 [release](https://github.com/fex-team/swiper/releases) 页面下载；
+1. 引入 js 和 css，可以按照下面两种方式之一进行：
+    1. 在 [release](https://github.com/fex-team/swiper/releases) 页面下载构建好的 js 和 css；
+    2. 通过 npm 或 yarn 安装，命令 `npm install fex-swiper` 或 `yarn add fex-swiper`，目的文件在 `dist` 目录下；
 
 2. 创建一个容器 `div`，注意：这个容器必须是有宽度和高度（如 100% 或者 650px）；
 ```html
