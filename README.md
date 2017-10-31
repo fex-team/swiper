@@ -256,19 +256,19 @@ swiper.off('swipeChanged', function (e) {
 TypeScript + Webpack + Jest
 
 ### 目录结构
-├── docs 文档  
-├── examples 例子  
-├── index.html 开发用到的 demo  
-├── src 源码  
-│   ├── constant.ts 常量定义  
-│   ├── device.ts 统一设备  
-│   ├── easing.ts 缓动函数  
-│   ├── interface.ts 接口定义  
-│   ├── render.ts render 抽象类  
-│   ├── renders 支持的六种翻页效果  
-│   ├── swiper.css 样式文件  
-│   └── swiper.ts 主文件  
-└── tests 测试文件
+-docs 文档  
+-examples 例子  
+-index.html 开发用到的 demo  
+-src 源码  
+    -constant.ts 常量定义  
+    -device.ts 统一设备  
+    -easing.ts 缓动函数  
+    -interface.ts 接口定义  
+    -render.ts render 抽象类  
+    -renders 支持的六种翻页效果  
+    -swiper.css 样式文件  
+    -swiper.ts 主文件  
+-tests 测试文件
 
 ### 开发步骤
 1. Fork 代码至自己的代码库，并 clone 到本地；
