@@ -35,7 +35,7 @@ export class Device {
     public transitionEvent: string;
 
     constructor(global) {
-        this.hasTouch = !!(('ontouchstart' in global && !/Mac OS X /.test(global.navigator.userAgent))
+        this.hasTouch = !!('ontouchstart' in global
         || (global.DocumentTouch && global.document instanceof global.DocumentTouch));
 
         this.startEvent = this.hasTouch ? 'touchstart' : 'mousedown';
