@@ -94,12 +94,12 @@ data                | [Page](#page)[]            | []                           
 debug               | boolean           | `false`                           | 是否开启调试模式    
 isVertical          | boolean           | `true`                            | 是否是垂直方向滑动
 isLoop              | boolean           | `false`                           |是否开启循环翻页 
-keepDefaultClass    | string[]          | []              | 保持默认行为的 class 名，详见[说明](#about-keepdefault)
+keepDefaultClasses    | string[]          | []              | 保持默认行为的 class 名，详见[说明](#about-keepdefault)
 transition          | [Transition](#transition)           | `{name: 'slide', duration: 800}`  | 翻页过渡动画，按照优先级取值，详见[优先级](#about-transition-priority)
 
-**关于 keepDefaultClass 说明**<a name="about-keepdefault"></a>
+**关于 keepDefaultClasses 说明**<a name="about-keepdefault"></a>
 
-为防止滑动事件中断，Swiper 默认阻止所有除了 `a`, `input`, `textarea`, `select` 以外的所有元素的滑动事件(mouseXXX, touchXXX)默认行为。但是在实际项目中，可能还有一些元素需要被排除在外（如微信中，长按图片会有识别二维码的响应，因此就需要将该图片的 className 放入该数组中）。因此 `keepDefaultClass` 就是一个 **要保持默认响应的元素 class 的白名单**。
+为防止滑动事件中断，Swiper 默认阻止所有除了 `a`, `input`, `textarea`, `select` 以外的所有元素的滑动事件(mouseXXX, touchXXX)默认行为。但是在实际项目中，可能还有一些元素需要被排除在外（如微信中，长按图片会有识别二维码的响应，因此就需要将该图片的 className 放入该数组中）。因此 `keepDefaultClasses` 就是一个 **要保持默认响应的元素 class 的白名单**。
 
 **过渡效果优先级**<a name="about-transition-priority"></a>
 
