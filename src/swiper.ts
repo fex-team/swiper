@@ -185,9 +185,11 @@ export class Swiper {
         }
         
         let keepDefaultClasses = this.keepDefaultClasses;
-        for (let keepDefaultClass of keepDefaultClasses){
-            if (event.target.classList.contains(keepDefaultClass)) {
-                return;
+        for (let keepDefaultClass of keepDefaultClasses) {
+            for (let e = event.target; e !== null; e = e.parentElement) {
+                if (e.classList.contains(keepDefaultClass)) {
+                    return;
+                }
             }
         }
         
