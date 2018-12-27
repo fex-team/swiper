@@ -8,12 +8,12 @@
  * 
  */
 
-interface Point {
+export interface Point {
     X: number,
     Y: number
 }
 
-interface combinedEvent extends TouchEvent, MouseEvent {
+export interface combinedEvent extends TouchEvent, MouseEvent {
 
 };
 
