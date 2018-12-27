@@ -3,6 +3,7 @@
   "version": "1.0.3",
   "description": "a H5 swiper powered by FEX",
   "main": "src/swiper.ts",
+  "types": "dist/types/swiper.d.ts",
   "repository": "http://github.com/fex-team/swiper",
   "scripts": {
     "build": "webpack -p",

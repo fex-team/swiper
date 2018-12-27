@@ -3,7 +3,9 @@
         "module": "commonjs",
         "target": "es5",
         "noImplicitAny": false,
-        "sourceMap": true
+        "sourceMap": true,
+        "declaration": true,
+        "declarationDir": "./types"
     },
     "include": [
         "src/**/*"
