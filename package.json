@@ -2,11 +2,12 @@
   "name": "fex-swiper",
   "version": "1.0.3",
   "description": "a H5 swiper powered by FEX",
-  "main": "src/swiper.ts",
+  "main": "dist/swiper.umd.js",
+  "style": "dist/swiper.css",
   "types": "dist/types/swiper.d.ts",
   "repository": "http://github.com/fex-team/swiper",
   "scripts": {
-    "build": "webpack -p",
+    "build": "rm -rf dist && webpack",
     "dev": "webpack --watch",
     "test": "jest",
     "coveralls": "cat ./__coverage__/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
