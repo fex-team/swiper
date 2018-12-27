@@ -8,9 +8,9 @@
  */
 
 
-type Sign = 0 | -1 | 1;
+export type Sign = 0 | -1 | 1;
 
-interface RenderInterface {
+export interface RenderInterface {
     [key: string]: any;
 }
 
