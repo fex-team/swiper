@@ -361,7 +361,7 @@ export class Swiper {
         this.pageChange = false;
     }
 
-    public swipeTo(toIndex: number, transition: Transition) {
+    public swipeTo(toIndex: number, transition?: Transition) {
         if (this.sliding) {
             return;
         }
@@ -396,12 +396,12 @@ export class Swiper {
         this._swipeTo();
     }
 
-    public swipePrev(transition: Transition) {
+    public swipePrev(transition?: Transition) {
         var currentIndex = this.currentPage.index;
         this.swipeTo(currentIndex - 1, transition);
     }
 
-    public swipeNext(transition: Transition) {
+    public swipeNext(transition?: Transition) {
         var currentIndex = this.currentPage.index;
         this.swipeTo(currentIndex + 1, transition);
     }
